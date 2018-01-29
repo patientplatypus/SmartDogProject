@@ -12,35 +12,33 @@ import {
   Route
 }                               from 'react-router-dom';
 import { Provider }             from 'react-redux';
-import { syncHistoryWithStore } from 'react-router-redux';
-import configureStore           from './redux/store/configureStore';
-import { createBrowserHistory } from 'history';
-import App                      from './containers/app';
-import ScrollTop                from './components/scrollToTop/ScrollToTop';
-import Login                    from './views/login';
-import PageNotFound             from './views/pageNotFound/PageNotFound'; // not connected to redux (no index.js)
-import LogoutRoute              from './components/logoutRoute/LogoutRoute';
+// import { syncHistoryWithStore } from 'react-router-redux';
+// import configureStore           from './redux/store/configureStore';
+// import { createBrowserHistory } from 'history';
+import thunk                    from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
+import  reducer                 from './redux/reducers'
 
-const history       = createBrowserHistory();
-const store         = configureStore();
-const syncedHistory = syncHistoryWithStore(history, store);
+import SwitchEntryPoint from './components/screens/SwitchEntryPoint';
+import DoctorScreen from './components/screens/DoctorScreen';
+import PharmacistScreen from './components/screens/PharmacistScreen';
 
+const store = createStore(
+  reducer,
+  applyMiddleware(thunk)
+);
 
 class Root extends Component {
   render() {
     return (
       <Provider store={store}>
         <div>
-          <Router history={syncedHistory}>
-            <ScrollTop>
-              <Switch>
-                <Route exact path="/login" component={Login} />
-                <App />
-                {/* logout: just redirects to login (App will take care of removing the token) */}
-                <LogoutRoute path="/logout" />
-                <Route component={PageNotFound} />
-              </Switch>
-            </ScrollTop>
+          <Router>
+              <div>
+                <Route exact path="/" exact render={()=><SwitchEntryPoint />}/>
+                <Route path="/Doctor" exact render={()=><DoctorScreen />}/>
+                <Route path="/Pharmacist" exact render={()=><PharmacistScreen />}/>
+              </div>
           </Router>
         </div>
       </Provider>

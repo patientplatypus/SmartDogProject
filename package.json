@@ -134,6 +134,7 @@
     "antd-iconfont": "^2.10.0",
     "axios": "^0.16.1",
     "babel-polyfill": "^6.23.0",
+    "basic-auth-token": "^0.4.2",
     "chalk": "^2.0.1",
     "classnames": "^2.2.5",
     "express": "^4.15.3",
