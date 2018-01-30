@@ -12,14 +12,21 @@
 // export default reducersCombined
 
 import  { combineReducers }  from 'redux'
-import userlogin from './userlogin'
-import loginreturn from './returned/loginreturn'
-import registerocireturn from './returned/registerocireturn'
-import settoken from './settoken'
+// import userlogin from './userlogin'
+// import loginreturn from './returned/loginreturn'
+// import registerocireturn from './returned/registerocireturn'
+// import settoken from './settoken'
+
+import patientinfo from './patientinfo'
+import allpatients from './allpatients'
+import rxinfo from './rxinfo'
 
 export default combineReducers({
-  userlogin,
-  loginreturn,
-  registerocireturn,
-  settoken,
+  // userlogin,
+  // loginreturn,
+  // registerocireturn,
+  // settoken,
+  patientinfo,
+  rxinfo,
+  allpatients
 })

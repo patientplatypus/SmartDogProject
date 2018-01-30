@@ -1,7 +1,10 @@
 
 // export * from './server/Blueprint';
 // export * from './server/Compartment';
-export * from './server/LoginRegister';
+// export * from './server/LoginRegister';
+export * from './rx/patientinfo';
+export * from './rx/allpatients';
+export * from './rx/rxinfo';
 // export * from './server/UserAdmin';
 //
 

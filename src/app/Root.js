@@ -5,42 +5,57 @@ import React, {
   Component
 }                               from 'react';
 // import PropTypes                from 'prop-types';
-import {
-  // BrowserRouter as Router,
-  HashRouter as Router,
-  Switch,
-  Route
-}                               from 'react-router-dom';
+// import {
+//   // BrowserRouter as Router,
+//   browserHistory,
+//   HashRouter as Router,
+//   Switch,
+//   Route
+// }                               from 'react-router-dom';
+
+// import { Router, Route, browserHistory } from 'react-router';
+import { BrowserRouter, Route } from 'react-router-dom';
+
+
 import { Provider }             from 'react-redux';
 // import { syncHistoryWithStore } from 'react-router-redux';
 // import configureStore           from './redux/store/configureStore';
 // import { createBrowserHistory } from 'history';
 import thunk                    from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
-import  reducer                 from './redux/reducers'
+import  reducer                 from './redux/reducers';
 
-import SwitchEntryPoint from './components/screens/SwitchEntryPoint';
-import DoctorScreen from './components/screens/DoctorScreen';
-import PharmacistScreen from './components/screens/PharmacistScreen';
+import { createHashHistory } from 'history';
+
+import { syncHistoryWithStore } from 'react-router-redux';
+
+
+import Entry from './components/screens/SwitchEntryPoint';
+import Doctor from './components/screens/DoctorScreen';
+import Pharmacist from './components/screens/PharmacistScreen';
+import Test from './components/TestComponent';
 
 const store = createStore(
   reducer,
   applyMiddleware(thunk)
 );
 
+
+const history = createHashHistory()
+
+
 class Root extends Component {
   render() {
+    console.log('inside root');
     return (
       <Provider store={store}>
-        <div>
-          <Router>
-              <div>
-                <Route exact path="/" exact render={()=><SwitchEntryPoint />}/>
-                <Route path="/Doctor" exact render={()=><DoctorScreen />}/>
-                <Route path="/Pharmacist" exact render={()=><PharmacistScreen />}/>
-              </div>
-          </Router>
-        </div>
+          <BrowserRouter>
+            <div>
+             <Route exact path='/' component={Entry} />
+             <Route path='/pharmacist' component={Pharmacist} />
+             <Route path='/doctor' component={Doctor} />
+            </div>
+         </BrowserRouter>
       </Provider>
     );
   }
