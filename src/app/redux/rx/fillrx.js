@@ -3,10 +3,8 @@ import axios from 'axios';
 // const url = 'http://129.146.85.80:8000/';
 // http://private-0a8629-ironbankbcsapidoc.apiary-mock.com/pd/FirstName/LastName
 
-// 129.146.106.151:8080
-// const url = 'http://private-0a8629-ironbankbcsapidoc.apiary-mock.com/pd'
-
-const url = 'http://129.146.106.151:8080/pd'
+const url = 'http://129.146.106.151:8080/rx'
+//http://129.146.106.151:8080/rx/ID
 
 //WHY ARE WE DOING THIS???
 
@@ -19,36 +17,46 @@ const url = 'http://129.146.106.151:8080/pd'
 
 //HERE ARE THE AXIOS CALLS
 
-export const getALLPATIENTS = () => {
+export const fillRX = (payload) => {
   return (dispatch) => {
-    var sendurl = url;
+    console.log('value of payload: ', payload);
+    var sendurl = url + "/" + payload.id
     console.log('value of sendurl: ', sendurl);
-    axios.get(sendurl)
+    console.log('^^^^^^^^^');
+    console.log('fillrx info: ', payload);
+    console.log('value of payload.id ', payload.id);
+    console.log('value of payload.rxid: ', payload.rxid);
+    console.log('^^^^^^^^^');
+    axios.patch(sendurl,{
+      RXID: payload.rxid,
+      Status: "Filled",
+      Timestamp: Date.now()
+    })
     .then((response)=>{
-      console.log('inside response from all patients: ', response);
-      dispatch(AXIOSRETURNALLPATIENTS(response))
+      console.log('inside response from login auth and response : ', response);
+      dispatch(AXIOSRETURNFILLRX(response))
     })
     .catch(error => {
       console.log('inside error from login auth and response : ', error);
-      dispatch(AXIOSERRORALLPATIENTS(error))
+      dispatch(AXIOSERRORRFILLRX(error))
     })
   }
 }
 
 //HERE ARE THE ACTIONS ->>> REDUCERS
 
-export const AXIOSRETURNALLPATIENTS = (payload) => {
+export const AXIOSRETURNFILLRX = (payload) => {
   console.log('inside AXIOSRETURN and payload ', payload);
   return{
-    type: 'ALL_PATIENTS',
+    type: 'FILL_RX',
     data: payload.data
   }
 }
 
-export const AXIOSERRORALLPATIENTS = (payload) => {
+export const AXIOSERRORRFILLRX = (payload) => {
   console.log('inside AXIOSERROR and payload ', payload);
   return{
-    type: 'ALL_ERROR',
+    type: 'FILLRX_ERROR',
     data: payload
   }
 }

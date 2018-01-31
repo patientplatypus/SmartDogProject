@@ -16,37 +16,60 @@ const url = 'http://129.146.106.151:8080/rx'
 
 //HERE ARE THE AXIOS CALLS
 
-export const getRXINFO = (payload) => {
+export const submitRX = (data) => {
   return (dispatch) => {
-    console.log('value of payload: ', payload);
-    var sendurl = url + "/" + payload.id
+    console.log('value of payload: ', data);
+    var sendurl = url + "/" + data.id
     console.log('value of sendurl: ', sendurl);
-    axios.get(sendurl)
+    console.log('INSIDE SUBMITRX');
+    console.log("*****************");
+    console.log("*****************");
+    console.log("*****************");
+    console.log('value of data.id, ', data.id);
+    console.log("*****************");
+    console.log("*****************");
+    console.log("*****************");
+    console.log('value of payload: ', data);
+    console.log('value of payload: ', data['FirstName']);
+    console.log(typeof(data));
+    console.log(typeof(data.FirstName));
+    axios.post(sendurl, {
+      ID: data.id,
+      FirstName: data.FirstName,
+      LastName: data.LastName,
+      DOB: data.DOB,
+      Prescription: data.Prescription,
+      Refills: data.Refills,
+      Doctor: data.Doctor,
+      License: data.License,
+      Status: "prescribed",
+      Timestamp: data.Timestamp
+    })
     .then((response)=>{
       console.log('inside response from login auth and response : ', response);
-      dispatch(AXIOSRETURNRXINFO(response))
+      dispatch(AXIOSRETURNRXSUBMIT(response))
     })
     .catch(error => {
       console.log('inside error from login auth and response : ', error);
-      dispatch(AXIOSERRORRXINFO(error))
+      dispatch(AXIOSERRORRRXSUBMIT(error))
     })
   }
 }
 
 //HERE ARE THE ACTIONS ->>> REDUCERS
 
-export const AXIOSRETURNRXINFO = (payload) => {
+export const AXIOSRETURNRXSUBMIT = (payload) => {
   console.log('inside AXIOSRETURN and payload ', payload);
   return{
-    type: 'RX_INFO',
+    type: 'SUBMIT_RX',
     data: payload.data
   }
 }
 
-export const AXIOSERRORRXINFO = (payload) => {
+export const AXIOSERRORRRXSUBMIT = (payload) => {
   console.log('inside AXIOSERROR and payload ', payload);
   return{
-    type: 'RX_ERROR',
+    type: 'SUBMITRX_ERROR',
     data: payload
   }
 }

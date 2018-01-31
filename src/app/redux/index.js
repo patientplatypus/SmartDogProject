@@ -5,6 +5,8 @@
 export * from './rx/patientinfo';
 export * from './rx/allpatients';
 export * from './rx/rxinfo';
+export * from './rx/submitrx';
+export * from './rx/fillrx';
 // export * from './server/UserAdmin';
 //
 

@@ -20,6 +20,8 @@ import  { combineReducers }  from 'redux'
 import patientinfo from './patientinfo'
 import allpatients from './allpatients'
 import rxinfo from './rxinfo'
+import submitrx from './submitrx'
+import fillrx from './fillrx'
 
 export default combineReducers({
   // userlogin,
@@ -28,5 +30,7 @@ export default combineReducers({
   // settoken,
   patientinfo,
   rxinfo,
-  allpatients
+  allpatients,
+  submitrx,
+  fillrx
 })

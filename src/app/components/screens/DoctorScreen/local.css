@@ -2,8 +2,13 @@
   background: white;
   color: black;
 }*/
-.mainTitle{
-  font-size: 20pt;
-  font-family: "GoodTime";
-  color: "#1989AC";
+
+.ant-modal-body{
+  background-color: #E8F1F5
+}
+.ant-modal-footer{
+  background-color: #E8F1F5
+}
+.ant-modal-header{
+  background-color: #FFDE25
 }

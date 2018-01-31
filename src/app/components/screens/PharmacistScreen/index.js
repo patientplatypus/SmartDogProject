@@ -20,7 +20,7 @@ import renderIf from 'render-if'
 import styled, { keyframes }  from 'styled-components';
 
 import {Link, Redirect} from "react-router-dom";
-import { getPATIENTINFO, getALLPATIENTS, getRXINFO } from '../../../redux';
+import { getPATIENTINFO, getALLPATIENTS, getRXINFO, fillRX } from '../../../redux';
 const {Header, Content} = Layout;
 const FormItem = Form.Item;
 
@@ -120,10 +120,15 @@ class Pharmacist extends Component {
       console.log('value of allpatients after receiving props: ', nextProps.allpatients.Persons);
     }
     if(nextProps.rxinfo!=this.props.rxinfo){
+      console.log("&&&&&&&&&");
+      console.log('inside rxinfo');
+      console.log('value of nextProps rxinfo: ', nextProps.rxinfo);
+      console.log("&&&&&&&&&");
       this.setState({
         receivedpatientrx: true,
         rxinfo: nextProps.rxinfo
       }, ()=>{
+        this.forceUpdate();
         console.log("in componentWillReceiveProps and requestpatientrx: ", nextProps.rxinfo);
       })
     }
@@ -154,8 +159,16 @@ class Pharmacist extends Component {
     }
   }
 
-  handleFillScript(value){
-    console.log('script i value: ', value);
+  handleFillScript(id, rxid){
+    // console.log('script i value: ', value);
+    var payload = {id: id, rxid: rxid}
+    this.props.putrx(payload)
+    this.props.getrxinfo({id: id})
+    // this.setState({
+    //   requestpatientinfo: true
+    // }, ()=>{
+    //   this.props.getpatientinfo({firstname: this.state.selectedFirstName, lastname: this.state.selectedLastName})
+    // })
   }
 
   handleBlur() {
@@ -202,17 +215,17 @@ class Pharmacist extends Component {
               </Flex1>
               <Flex1>
                 <p key={i}>
-                  {pill.REFILLS}
+                  {pill.Refills}
                 </p>
               </Flex1>
               <Flex1>
                 <div key={i}>
-                  {renderIf(pill.Status==="Prescribed")(
-                    <Button type="secondary" size="large" onClick={()=>this.handleFillScript(i)}>
+                  {renderIf(pill.Status==="prescribed")(
+                    <Button type="secondary" size="large" onClick={()=>this.handleFillScript(pill.ID, pill.RXID)}>
                       Click to Fill
                     </Button>
                   )}
-                  {renderIf(pill.Status==="Filled")(
+                  {renderIf(pill.Status!="prescribed")(
                     <div>
                       Already Filled
                     </div>
@@ -355,7 +368,7 @@ class Pharmacist extends Component {
       )}
 
       {renderIf(this.state.receivedpatientrx===true)(
-        <FadeInLeftBigDiv style={{position: "absolute", left: "2.5vw", top: "27.5vh", width: "72.5vw", height: "50vh", textAlign: "left"}}>
+        <FadeInLeftBigDiv style={{position: "absolute", left: "2.5vw", top: "26.5vh", width: "72.5vw", height: "50vh", textAlign: "left", overflow: "hidden", overflowY: "auto"}}>
           <Card title="PRESCRIPTIONS" bordered={false} style={{ backgroundColor: "#1989AC", color: "#283E56"}}>
 
             <Card style={{fontWeight: "bold", fontSize:"1.5vh", marginBottom: "1vh", padding:"0vh", textAlign: "left", backgroundColor: "#283E56"}}>
@@ -411,7 +424,8 @@ function mapDispatchToProps(dispatch) {
       //  checkloginoci: (e)=>{dispatch(checkLoginOCI(e))},
       getpatientinfo: (e)=>{dispatch(getPATIENTINFO(e))},
       getallpatients: ()=>{dispatch(getALLPATIENTS())},
-      getrxinfo: (e)=>{dispatch(getRXINFO(e))}
+      getrxinfo: (e)=>{dispatch(getRXINFO(e))},
+      putrx: (e)=>{dispatch(fillRX(e))}
     })
 }
 
@@ -420,7 +434,8 @@ function mapStateToProps(state) {
       // loginreturn: state.loginreturn,
       patientinfo: state.patientinfo,
       allpatients: state.allpatients,
-      rxinfo: state.rxinfo
+      rxinfo: state.rxinfo,
+      fillrx: state.fillrx
     })
 }
 

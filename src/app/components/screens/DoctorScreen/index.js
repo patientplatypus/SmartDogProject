@@ -9,6 +9,7 @@ import {
   Card,
   Layout,
   Select,
+  Modal,
   Row,
   Col,
   Menu
@@ -20,7 +21,7 @@ import renderIf from 'render-if'
 import styled, { keyframes }  from 'styled-components';
 
 import {Link, Redirect} from "react-router-dom";
-import { getPATIENTINFO, getALLPATIENTS, getRXINFO } from '../../../redux';
+import { getPATIENTINFO, getALLPATIENTS, getRXINFO, submitRX } from '../../../redux';
 const {Header, Content} = Layout;
 const FormItem = Form.Item;
 
@@ -36,6 +37,9 @@ const FadeInRightDiv = styled.div`
 
 const FadeInLeftBigDiv = styled.div`
   animation: 1.5s ${FadeInLeftBigAnimation};
+`;
+const FadeInLeftBigDiv2 = styled.div`
+  animation: 1.9s ${FadeInLeftBigAnimation};
 `;
 
 const Option = Select.Option;
@@ -76,7 +80,14 @@ class Doctor extends Component {
       selectedFirstName: null,
       selectedLastName: null,
       displaygetpatientwarning: false,
-      rxinfo: []
+      rxinfo: [],
+      rxidinput: "",
+      doctorinput: "",
+      licenseinput: "",
+      scriptinput: "",
+      refillsinput: "",
+      showsubmitinputbutton: false,
+      modalVisible: false
     }
   }
 
@@ -94,10 +105,12 @@ class Doctor extends Component {
     if(nextProps.patientinfo!=this.props.patientinfo){
       this.setState({
         patientinfoTitle: "Patient Name: " + nextProps.patientinfo.LastName + ", " + nextProps.patientinfo.FirstName,
+        patientinfoFirstName: nextProps.patientinfo.FirstName,
+        patientinfoLastName: nextProps.patientinfo.LastName,
         patientinfoID: nextProps.patientinfo.ID,
         patientinfoDOB: nextProps.patientinfo.DOB,
         patientinfoAddress: nextProps.patientinfo.Address,
-        patientinfoEthnicity: nextProps.patientinfo.Ethinicity, //misspelled doy!
+        patientinfoEthnicity: nextProps.patientinfo.Ethnicity, //misspelled doy!
         patientinfoPhone: nextProps.patientinfo.Phone,
       }, ()=>{
         this.setState({
@@ -106,6 +119,11 @@ class Doctor extends Component {
       })
       console.log('value of patientinfo after receiving props: ', nextProps.patientinfo);
       if(nextProps.patientinfo.ID!=null){
+        // this.props.getrxinfo({id: nextProps.patientinfo.ID})
+        console.log("8888888888");
+        console.log('value of nextProps id', nextProps.patientinfo.ID);
+        console.log('value of state id',
+        this.state.patientinfoID);
         this.props.getrxinfo({id: nextProps.patientinfo.ID})
       }
     }
@@ -127,6 +145,23 @@ class Doctor extends Component {
         console.log("in componentWillReceiveProps and requestpatientrx: ", nextProps.rxinfo);
       })
     }
+    if(nextProps.submitrxreturn!=this.props.submitrxreturn){
+      console.log('value of submitrx in componentWillReceiveProps, ', nextProps.submitrxreturn.response);
+      if(nextProps.submitrxreturn.response==="ok"){
+        // this.props.getpatientinfo({firstname: this.state.selectedFirstName, lastname: this.state.selectedLastName})
+        // this.props.getrxinfo({id: nextProps.patientinfoID})
+        // this.props.getrxinfo({id: nextProps.patientinfo.ID})
+        this.props.getrxinfo({id: nextProps.patientinfo.ID})
+        this.setState({
+          modalVisible: true,
+          rxidinput: "",
+          doctorinput: "",
+          licenseinput: "",
+          scriptinput: "",
+          refillsinput: "",
+        })
+      }
+    }
 
   }
 
@@ -138,6 +173,33 @@ class Doctor extends Component {
       selectedLastName: localNames[1],
       displaygetpatientwarning: false
     })
+  }
+
+  submitScriptButton(){
+    var payload;
+    var localTimestamp = Date.now()
+    payload = {
+      id: this.state.patientinfoID,
+      FirstName: this.state.patientinfoFirstName,
+      LastName: this.state.patientinfoLastName,
+      DOB: this.state.patientinfoDOB,
+      Prescription: this.state.scriptinput,
+      Doctor: this.state.doctorinput,
+      Refills: this.state.refillsinput,
+      License: this.state.licenseinput,
+      Status: "prescribed",
+      Timestamp: localTimestamp,
+    };
+    console.log("&&&&&&&&&&&&&&&&");
+    console.log("&&&&&&&&&&&&&&&&");
+    console.log('value of payload ID ', payload.id);
+    console.log("&&&&&&&&&&&&&&&&");
+
+    console.log('value of payload: ', payload);
+    console.log('value of payload.FirstName: ', payload.FirstName);
+    this.props.submitrx(payload)
+    console.log("value of payload: ", payload);
+
   }
 
   handleGetPatient(){
@@ -160,6 +222,42 @@ class Doctor extends Component {
 
   handleFocus() {
     console.log('focus');
+  }
+
+  checkAllInputs(){
+    if (this.state.doctorinput!=""&&this.state.licenseinput!=""&&this.state.scriptinput!=""&&this.state.refillsinput!=""){
+      this.setState({
+        showsubmitinputbutton: true
+      })
+    }else{
+      this.setState({
+        showsubmitinputbutton: false
+      })
+    }
+  }
+
+  updateInputs(input, value){
+    if (input==="RXID"){
+      this.setState({
+        rxidinput: value
+      }, ()=>{this.checkAllInputs()})
+    }else if(input==="DOCTOR"){
+      this.setState({
+        doctorinput: value
+      }, ()=>{this.checkAllInputs()})
+    }else if(input==="LICENSE"){
+      this.setState({
+        licenseinput: value
+      }, ()=>{this.checkAllInputs()})
+    }else if(input==="SCRIPT"){
+      this.setState({
+        scriptinput: value
+      }, ()=>{this.checkAllInputs()})
+    }else if(input==="REFILLS"){
+      this.setState({
+        refillsinput: value
+      }, ()=>{this.checkAllInputs()})
+    }
   }
 
   render() {
@@ -198,7 +296,7 @@ class Doctor extends Component {
               </Flex1>
               <Flex1>
                 <p key={i}>
-                  {pill.REFILLS}
+                  {pill.Refills}
                 </p>
               </Flex1>
               <Flex1>
@@ -269,7 +367,7 @@ class Doctor extends Component {
        )}
 
       {renderIf(this.state.receivedpatientinfo===true)(
-        <FadeInRightDiv style={{position: "absolute", left: "77.5vw", right: "20vw", top: "2.5vh", width: "20vw", textAlign: "left"}}>
+        <FadeInRightDiv style={{position: "absolute", left: "77.5vw", right: "20vw", top: "2.5vh", width: "20vw", textAlign: "left",  overflow: "hidden", overflowY: "auto"}}>
           <Card title={this.state.patientinfoTitle} bordered={false} style={{ backgroundColor: "#1989AC", color: "#283E56"}}>
             <FlexColumn>
               <Flex1>
@@ -342,48 +440,128 @@ class Doctor extends Component {
       )}
 
       {renderIf(this.state.receivedpatientrx===true)(
-        <FadeInLeftBigDiv style={{position: "absolute", left: "2.5vw", top: "27.5vh", width: "72.5vw", height: "50vh", textAlign: "left"}}>
-          <Card title="PRESCRIPTIONS" bordered={false} style={{ backgroundColor: "#1989AC", color: "#283E56"}}>
+        <div>
+          <FadeInLeftBigDiv style={{position: "absolute", left: "2.5vw", top: "26.5vh", width: "72.5vw", height: "50vh", textAlign: "left", overflow: "hidden", overflowY: "auto"}}>
+            <Card title="PRESCRIPTIONS" bordered={false} style={{ backgroundColor: "#1989AC", color: "#283E56", marginBottom: "5vh"}}>
 
-            <Card style={{fontWeight: "bold", fontSize:"1.5vh", marginBottom: "1vh", padding:"0vh", textAlign: "left", backgroundColor: "#283E56"}}>
-              <FlexRow>
-                <Flex1>
-                  <h1 style={{color:"#E8F1F5"}}>
-                    RXID
-                  </h1>
-                </Flex1>
-                <Flex1>
-                  <h1 style={{color:"#E8F1F5"}}>
-                    DOCTOR
-                  </h1>
-                </Flex1>
-                <Flex1>
-                  <h1 style={{color:"#E8F1F5"}}>
-                    LICENSE
-                  </h1>
-                </Flex1>
-                <Flex1>
-                  <h1 style={{color:"#E8F1F5"}}>
-                    SCRIPT
-                  </h1>
-                </Flex1>
-                <Flex1>
-                  <h1 style={{color:"#E8F1F5"}}>
-                    REFILLS
-                  </h1>
-                </Flex1>
-                <Flex1>
-                  <h1 style={{color:"#E8F1F5"}}>
-                    STATUS
-                  </h1>
-                </Flex1>
-              </FlexRow>
+              <Card style={{fontWeight: "bold", fontSize:"1.5vh", marginBottom: "1vh", padding:"0vh", textAlign: "left", backgroundColor: "#283E56"}}>
+                <FlexRow>
+                  <Flex1>
+                    <h1 style={{color:"#E8F1F5"}}>
+                      RXID
+                    </h1>
+                  </Flex1>
+                  <Flex1>
+                    <h1 style={{color:"#E8F1F5"}}>
+                      DOCTOR
+                    </h1>
+                  </Flex1>
+                  <Flex1>
+                    <h1 style={{color:"#E8F1F5"}}>
+                      LICENSE
+                    </h1>
+                  </Flex1>
+                  <Flex1>
+                    <h1 style={{color:"#E8F1F5"}}>
+                      SCRIPT
+                    </h1>
+                  </Flex1>
+                  <Flex1>
+                    <h1 style={{color:"#E8F1F5"}}>
+                      REFILLS
+                    </h1>
+                  </Flex1>
+                  <Flex1>
+                    <h1 style={{color:"#E8F1F5"}}>
+                      STATUS
+                    </h1>
+                  </Flex1>
+                </FlexRow>
+              </Card>
+                {scriptlist}
             </Card>
+          </FadeInLeftBigDiv>
 
-            {scriptlist}
-          </Card>
-        </FadeInLeftBigDiv>
+          <FadeInLeftBigDiv2 style={{position: "absolute", left: "2.5vw", top: "68vh", width: "72.5vw", height: "20vh", textAlign: "left"}}>
+            <Card title="ADD SCRIPT" bordered={false} style={{ backgroundColor: "#1989AC", color: "#283E56"}}>
+              <FlexColumn>
+                <Flex1>
+                  <Card style={{fontWeight: "bold", fontSize:"1vh", marginBottom: "1vh", padding:"0vh", textAlign: "left", backgroundColor: "#283E56"}}>
+                    <FlexRow>
+                      <Flex1>
+                        <h1 style={{color:"#E8F1F5"}}>
+                          DOCTOR
+                        </h1>
+                      </Flex1>
+                      <Flex1>
+                        <h1 style={{color:"#E8F1F5"}}>
+                          LICENSE
+                        </h1>
+                      </Flex1>
+                      <Flex1>
+                        <h1 style={{color:"#E8F1F5"}}>
+                          SCRIPT
+                        </h1>
+                      </Flex1>
+                      <Flex1>
+                        <h1 style={{color:"#E8F1F5"}}>
+                          REFILLS
+                        </h1>
+                      </Flex1>
+                    </FlexRow>
+                  </Card>
+                </Flex1>
+                <Flex1>
+                  <Card>
+                    <FlexRow>
+                      <Flex1 style={{marginRight:"1vw"}}>
+                        <Input size="large" placeholder="DOCTOR"
+                        value={this.state.doctorinput}
+                        onChange={(e)=>{this.updateInputs("DOCTOR", e.target.value)}}/>
+                      </Flex1>
+                      <Flex1 style={{marginRight:"1vw"}}>
+                        <Input size="large" placeholder="LICENSE"
+                        value={this.state.licenseinput}
+                        onChange={(e)=>{this.updateInputs("LICENSE", e.target.value)}}/>
+                      </Flex1>
+                      <Flex1 style={{marginRight:"1vw"}}>
+                        <Input size="large" placeholder="SCRIPT"
+                        value={this.state.scriptinput} onChange={(e)=>{this.updateInputs("SCRIPT", e.target.value)}}/>
+                      </Flex1>
+                      <Flex1 style={{marginRight:"1vw"}}>
+                        <Input size="large" placeholder="REFILLS"
+                        value={this.state.refillsinput}
+                        onChange={(e)=>{this.updateInputs("REFILLS", e.target.value)}}/>
+                      </Flex1>
+                    </FlexRow>
+                  </Card>
+                </Flex1>
+              </FlexColumn>
+            </Card>
+          </FadeInLeftBigDiv2>
+        </div>
       )}
+
+      {renderIf(this.state.showsubmitinputbutton===true)(
+        <FadeInRightDiv style={{position: "absolute", left: "77.5vw", right: "20vw", top: "80vh", width: "20vw", textAlign: "left"}}>
+          <Button type="primary" size={"large"} onClick={()=>{this.submitScriptButton()}}>
+            Submit Script!
+          </Button>
+        </FadeInRightDiv>
+      )}
+
+      <Modal
+          visible={this.state.modalVisible}
+          title="Prescription Submitted!"
+          footer={[
+            <Button key="submit" type="primary" onClick={()=>this.setState({modalVisible: false, showsubmitinputbutton: false})}>
+              Yata!
+            </Button>,
+          ]}
+        >
+          <p>You have written a prescription!</p>
+        </Modal>
+
 
       </div>
     );
@@ -398,7 +576,8 @@ function mapDispatchToProps(dispatch) {
       //  checkloginoci: (e)=>{dispatch(checkLoginOCI(e))},
       getpatientinfo: (e)=>{dispatch(getPATIENTINFO(e))},
       getallpatients: ()=>{dispatch(getALLPATIENTS())},
-      getrxinfo: (e)=>{dispatch(getRXINFO(e))}
+      getrxinfo: (e)=>{dispatch(getRXINFO(e))},
+      submitrx: (e)=>{dispatch(submitRX(e))}
     })
 }
 
@@ -407,7 +586,8 @@ function mapStateToProps(state) {
       // loginreturn: state.loginreturn,
       patientinfo: state.patientinfo,
       allpatients: state.allpatients,
-      rxinfo: state.rxinfo
+      rxinfo: state.rxinfo,
+      submitrxreturn: state.submitrx
     })
 }
 
