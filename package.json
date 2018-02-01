@@ -138,6 +138,7 @@
     "chalk": "^2.0.1",
     "classnames": "^2.2.5",
     "express": "^4.15.3",
+    "fetch": "^1.1.0",
     "history": "^4.6.1",
     "js-base64": "^2.1.9",
     "jwt-decode": "^2.2.0",

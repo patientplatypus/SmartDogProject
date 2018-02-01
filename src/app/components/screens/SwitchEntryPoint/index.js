@@ -95,6 +95,14 @@ class Entry extends Component {
               <Button type="secondary" size="large" onClick={()=>this.setState({redirect: "pharmacist"})}>
                 Pharmacist
               </Button>
+            </Flex1>
+            <Flex1>
+              <br/>
+            </Flex1>
+            <Flex1>
+              <Button type="secondary" size="large" onClick={()=>this.setState({redirect: "iot"})}>
+                IoT
+              </Button>
               <br/>
             </Flex1>
           </FlexColumn>
@@ -104,6 +112,9 @@ class Entry extends Component {
         )}
         {renderIf(this.state.redirect==="pharmacist")(
           <Redirect to='/pharmacist' />
+        )}
+        {renderIf(this.state.redirect==="iot")(
+          <Redirect to='/iot' />
         )}
       </div>
     );
