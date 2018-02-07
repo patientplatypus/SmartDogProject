@@ -30,11 +30,13 @@ import { createHashHistory } from 'history';
 import { syncHistoryWithStore } from 'react-router-redux';
 
 
-import Entry from './components/screens/SwitchEntryPoint';
-import Doctor from './components/screens/DoctorScreen';
-import Pharmacist from './components/screens/PharmacistScreen';
-import IoT from './components/screens/IoTScreen';
+// import Entry from './components/screens/SwitchEntryPoint';
+// import Doctor from './components/screens/DoctorScreen';
+// import Pharmacist from './components/screens/PharmacistScreen';
+// import IoT from './components/screens/IoTScreen';
 // import Test from './components/TestComponent';
+
+import EntryPage from './components/screens/EntryPage'
 
 
 const store = createStore(
@@ -42,6 +44,9 @@ const store = createStore(
   applyMiddleware(thunk)
 );
 
+//  <Route path='/home' component={Pharmacist} />
+//  <Route path='/doctor' component={Doctor} />
+//  <Route path='/iot' component={IoT} />
 
 const history = createHashHistory()
 
@@ -53,10 +58,7 @@ class Root extends Component {
       <Provider store={store}>
           <BrowserRouter>
             <div>
-             <Route exact path='/' component={Entry} />
-             <Route path='/pharmacist' component={Pharmacist} />
-             <Route path='/doctor' component={Doctor} />
-             <Route path='/iot' component={IoT} />
+             <Route exact path='/' component={EntryPage} />
             </div>
          </BrowserRouter>
       </Provider>
