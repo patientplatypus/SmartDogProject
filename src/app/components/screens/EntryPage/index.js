@@ -19,6 +19,10 @@ import './local.css';
 import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
+// 
+// import XLSX from 'xlsx';
+//
+// import worksheetexample from '../../sample_data/activeUsers.xlsx';
 
 
 
@@ -50,6 +54,10 @@ class EntryPage extends Component {
 
   buttonClicked(value){
     console.log('inside button clicked and value: ', value);
+
+  }
+
+  componentWillMount(){
 
   }
 
