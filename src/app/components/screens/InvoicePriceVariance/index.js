@@ -19,6 +19,7 @@ import './local.css';
 import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
+import axios from 'axios';
 //
 // import XLSX from 'xlsx';
 //
@@ -44,7 +45,7 @@ const FlexColumn = styled.div`
 `
 
 
-class EntryPage extends Component {
+class InvoicePriceVariance extends Component {
   constructor() {
     super();
     this.state = {
@@ -58,14 +59,23 @@ class EntryPage extends Component {
   }
 
   componentWillMount(){
-
+    var url = "http://localhost:5000/workbook/"
+    axios.post(url,{
+      workbookName: "invoicePriceVariance"
+    })
+    .then((response)=>{
+      console.log("value of response: ", response);
+    })
+    .catch((error)=>{
+      console.log("value of error: ", error);
+    })
   }
 
   render() {
     return (
       <div>
         <h1>
-          hello there EntryPage
+          hello there InvoicePriceVariance
         </h1>
       </div>
     );
@@ -87,5 +97,5 @@ function mapStateToProps(state) {
 
 export default (connect(
     mapStateToProps, mapDispatchToProps)(
-    EntryPage
+    InvoicePriceVariance
 ))

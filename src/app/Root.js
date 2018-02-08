@@ -37,7 +37,14 @@ import { syncHistoryWithStore } from 'react-router-redux';
 // import Test from './components/TestComponent';
 
 import EntryPage from './components/screens/EntryPage'
+import ActiveUsers from './components/screens/ActiveUsers'
+import EarlyPayments from './components/screens/EarlyPayments'
+import InvoicePriceVariance from './components/screens/InvoicePriceVariance'
+import Requisitions from './components/screens/Requisitions'
+import UnapprovedPurchaseOrders from './components/screens/UnapprovedPurchaseOrders'
+import { Menu, Icon } from 'antd';
 
+import renderIf from "render-if";
 
 const store = createStore(
   reducer,
@@ -48,19 +55,95 @@ const store = createStore(
 //  <Route path='/doctor' component={Doctor} />
 //  <Route path='/iot' component={IoT} />
 
+//EntryPage
+
 const history = createHashHistory()
 
 
 class Root extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      current: 'splash'
+    }
+  }
+
+  handleClick = (e) => {
+    console.log('click ', e.key);
+    this.setState({
+      current: e.key,
+    });
+  }
   render() {
     console.log('inside root');
     return (
       <Provider store={store}>
-          <BrowserRouter>
-            <div>
-             <Route exact path='/' component={EntryPage} />
-            </div>
-         </BrowserRouter>
+        <div>
+           <Menu
+               onClick={this.handleClick}
+               selectedKeys={[this.state.current]}
+               mode="horizontal"
+               style={{backgroundColor: "#fffcff",
+                       color: "#f53234"}}
+             >
+               <Menu.Item key="EntryPage">
+                 <Icon type="home" /> Home
+               </Menu.Item>
+               <Menu.Item key="ActiveUsers">
+                 <Icon type="area-chart" /> Active Users
+               </Menu.Item>
+               <Menu.Item key="EarlyPayments">
+                 <Icon type="area-chart" /> Early Payments
+               </Menu.Item>
+               <Menu.Item key="InvoicePriceVariance">
+                 <Icon type="area-chart" /> Invoice Price Variance
+               </Menu.Item>
+               <Menu.Item key="Requisitions">
+                 <Icon type="area-chart" /> Requisitions
+               </Menu.Item>
+               <Menu.Item key="UnapprovedPurchaseOrders">
+                 <Icon type="area-chart" /> Unapproved Purchase Orders
+               </Menu.Item>
+           </Menu>
+
+
+           {renderIf(this.state.current==='EntryPage')(
+             <div>
+               <EntryPage />
+             </div>
+           )}
+
+           {renderIf(this.state.current==='ActiveUsers')(
+             <div>
+               <ActiveUsers />
+             </div>
+           )}
+
+           {renderIf(this.state.current==='EarlyPayments')(
+             <div>
+               <EarlyPayments />
+             </div>
+           )}
+
+           {renderIf(this.state.current==='InvoicePriceVariance')(
+             <div>
+               <InvoicePriceVariance />
+             </div>
+           )}
+
+           {renderIf(this.state.current==='Requisitions')(
+             <div>
+               <Requisitions />
+             </div>
+           )}
+
+           {renderIf(this.state.current==='UnapprovedPurchaseOrders')(
+             <div>
+               <UnapprovedPurchaseOrders />
+             </div>
+           )}
+
+        </div>
       </Provider>
     );
   }
