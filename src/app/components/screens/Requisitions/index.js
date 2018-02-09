@@ -20,6 +20,7 @@ import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
 import axios from 'axios';
+import "./grid.scss"
 //
 // import XLSX from 'xlsx';
 //
@@ -74,9 +75,13 @@ class Requisitions extends Component {
   render() {
     return (
       <div>
-        <h1>
-          hello there Requisitions
-        </h1>
+        <div className="GridContainer">
+          <h1>
+            hello there Requisitions
+          </h1>
+          <div className="graphbox">
+          </div>
+        </div>
       </div>
     );
   }
