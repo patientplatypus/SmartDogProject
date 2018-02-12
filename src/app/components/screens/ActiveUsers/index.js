@@ -60,6 +60,7 @@ class ActiveUsers extends Component {
       arr500: null,
       arr600: null,
       arrOver600: null,
+      clickedindexArray: []
     }
   }
 
@@ -126,13 +127,13 @@ class ActiveUsers extends Component {
 
 
     this.setState({
-      chartArr: [{x: 100,y: less100},
-                 {x: 200,y: less200},
-                 {x: 300,y: less300},
-                 {x: 400,y: less400},
-                 {x: 500,y: less500},
-                 {x: 600,y: less600},
-                 {x: 700,y: over600}],
+      chartArr: [{x: 100,y: less100, click: "0"},
+                 {x: 200,y: less200, click: "1"},
+                 {x: 300,y: less300, click: "2"},
+                 {x: 400,y: less400, click: "3"},
+                 {x: 500,y: less500, click: "4"},
+                 {x: 600,y: less600, click: "5"},
+                 {x: 700,y: over600, click: "6"}],
       arr100: temp100,
       arr200: temp200,
       arr300: temp300,
@@ -147,6 +148,10 @@ class ActiveUsers extends Component {
     });
 
   };
+
+  clickeIndexFunction(clickedindex){
+
+  }
 
 
   componentWillMount(){
@@ -171,10 +176,10 @@ class ActiveUsers extends Component {
             hello there activeUsers
           </h1>
           <div className="graphbox" style={{paddingLeft: "0", paddingRight: "0"}}>
-            
-              <VictoryChart 
+            <Card style={{backgroundColor: `#DEE0E0`}}>
+              <VictoryChart
               >
-              <VictoryAxis 
+              <VictoryAxis
                   width={400}
                   height={400}
                   domain={[0, 700]}
@@ -188,7 +193,7 @@ class ActiveUsers extends Component {
                 x={150} y={285}
                 style={{fontSize:12, fontWeight: "bold"}}
                 />
-                <VictoryAxis dependentAxis 
+                <VictoryAxis dependentAxis
                   width={400}
                   height={400}
                   padding={{left: 200}}
@@ -203,14 +208,130 @@ class ActiveUsers extends Component {
                 style={{fontSize:12, fontWeight: "bold"}}
                 />
                 <VictoryBar
-                  dataComponent={
-                    <Bar events={{}}/>
-                  }
-                  
+                  style={{ data: { fill: "#fffcff", width: 30 } }}
                   data={this.state.chartArr}
+                  eventKey={datum=>datum.click}
+                  events={[
+                    {
+                      target: "data",
+                      eventKey: ["0","1","2","3","4","5","6"],
+                      eventHandlers: {
+                        onClick: (evt, clickedProps) => {
+                          const clickedIndex = clickedProps.index
+                          console.log('value of evt: ', evt);
+                          this.setState({
+                            clickedIndex: clickedIndex
+                          }, ()=>{
+                            console.log('after setstate and clickedIndex: ', this.state.clickedIndex);
+                          })
+                          return [
+                            {
+                              eventKey: "0",
+                              mutation: (props) => {
+                                console.log("props key color", props.style.fill);
+                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                }
+                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                                if(props.index!=clickedProps.index){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                              }
+                            },
+                            {
+                              eventKey: "1",
+                              mutation: (props) => {
+                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                }
+                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                                if(props.index!=clickedProps.index){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                              }
+                            },
+                            {
+                              eventKey: "2",
+                              mutation: (props) => {
+                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                }
+                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                                if(props.index!=clickedProps.index){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                              }
+                            },
+                            {
+                              eventKey: "3",
+                              mutation: (props) => {
+                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                }
+                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                                if(props.index!=clickedProps.index){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                              }
+                            },
+                            {
+                              eventKey: "4",
+                              mutation: (props) => {
+                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                }
+                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                                if(props.index!=clickedProps.index){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                              }
+                            },
+                            {
+                              eventKey: "5",
+                              mutation: (props) => {
+                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                }
+                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                                if(props.index!=clickedProps.index){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                              }
+                            },
+                            {
+                              eventKey: "6",
+                              mutation: (props) => {
+                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                }
+                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                                if(props.index!=clickedProps.index){
+                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                }
+                              }
+                            }
+                        ];
+                        }
+                      }
+                    }
+                  ]}
                 />
               </VictoryChart>
-         
+            </Card>
           </div>
         </div>
       </div>
