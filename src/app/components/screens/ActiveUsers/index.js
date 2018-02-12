@@ -21,6 +21,7 @@ import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
 import "./grid.scss"
 import axios from 'axios';
+import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, Bar, VictoryTheme } from 'victory';
 //
 // import XLSX from 'xlsx';
 //
@@ -169,7 +170,47 @@ class ActiveUsers extends Component {
           <h1>
             hello there activeUsers
           </h1>
-          <div className="graphbox">
+          <div className="graphbox" style={{paddingLeft: "0", paddingRight: "0"}}>
+            
+              <VictoryChart 
+              >
+              <VictoryAxis 
+                  width={400}
+                  height={400}
+                  domain={[0, 700]}
+                  tickValues={[100, 200, 300, 400, 500, 600, 700]}
+                  tickFormat={["100", "200", "300", "400", "500", "600", "700+"]}
+                  theme={VictoryTheme.material}
+                  standalone={false}
+                />
+                <VictoryLabel
+                text={["Days since last login"]}
+                x={150} y={285}
+                style={{fontSize:12, fontWeight: "bold"}}
+                />
+                <VictoryAxis dependentAxis 
+                  width={400}
+                  height={400}
+                  padding={{left: 200}}
+                  domain={[0, 300]}
+                  theme={VictoryTheme.material}
+                  standalone={false}
+                />
+                <VictoryLabel
+                text={["Amount of users"]}
+                x={5} y={200}
+                angle={270}
+                style={{fontSize:12, fontWeight: "bold"}}
+                />
+                <VictoryBar
+                  dataComponent={
+                    <Bar events={{}}/>
+                  }
+                  
+                  data={this.state.chartArr}
+                />
+              </VictoryChart>
+         
           </div>
         </div>
       </div>

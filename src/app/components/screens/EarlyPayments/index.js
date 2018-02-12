@@ -20,7 +20,7 @@ import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
 import axios from 'axios';
-import "./grid.scss"
+import "./grid.scss";
 //
 // import XLSX from 'xlsx';
 //

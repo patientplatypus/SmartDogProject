@@ -63,10 +63,12 @@ class EntryPage extends Component {
   }
 
   render() {
+    
     return (
       <div>
         <h1>
           hello there EntryPage
+
         </h1>
       </div>
     );
