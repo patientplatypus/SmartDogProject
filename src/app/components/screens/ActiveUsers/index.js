@@ -25,7 +25,6 @@ import axios from 'axios';
 import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, Bar, VictoryTheme } from 'victory';
 
 
-
 import {Link, Redirect} from "react-router-dom";
 import { checkLoginOCI } from '../../../redux';
 const {Header, Content} = Layout;
@@ -42,6 +41,12 @@ const Flex1 = styled.div`
 const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
+  text-align:center;
+`
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
   text-align:center;
 `
 
@@ -63,6 +68,7 @@ class ActiveUsers extends Component {
       rawData: null,
       filteredInfo: null,
       sortedInfo: null,
+      selectedRows: []
     }
   }
 
@@ -149,6 +155,14 @@ class ActiveUsers extends Component {
 
   };
 
+  handleTableChange = (pagination, filters, sorter) => {
+      console.log('Various parameters', pagination, filters, sorter);
+      this.setState({
+        filteredInfo: filters,
+        sortedInfo: sorter,
+      });
+    }
+
 
   componentWillMount(){
     var url = "http://localhost:5000/workbook/"
@@ -173,35 +187,51 @@ class ActiveUsers extends Component {
           title: 'User Name',
           dataIndex: 'USER_NAME',
           key: 'USER_NAME',
+          className: 'USER_NAME'
         }, {
           title: 'Employe ID',
           dataIndex: 'EMPLOYEE_ID',
           key: 'EMPLOYEE_ID',
           sorter: (a, b) => a.EMPLOYEE_ID - b.EMPLOYEE_ID,
-          sortOrder: sortedInfo.columnKey === 'EMPLOYEE_ID' && sortedInfo.order
+          sortOrder: sortedInfo.columnKey === 'EMPLOYEE_ID' && sortedInfo.orderm,
+          className: 'EMPLOYEE_ID'
         }, {
           title: 'Days Since Last Login',
           dataIndex: 'DAYS_SINCE_LAST_LOGIN',
           key: 'DAYS_SINCE_LAST_LOGIN',
           sorter: (a, b) => a.DAYS_SINCE_LAST_LOGIN - b.DAYS_SINCE_LAST_LOGIN,
-          sortOrder: sortedInfo.columnKey === 'DAYS_SINCE_LAST_LOGIN' && sortedInfo.order
+          sortOrder: sortedInfo.columnKey === 'DAYS_SINCE_LAST_LOGIN' && sortedInfo.order,
+          className: 'DAYS_SINCE_LAST_LOGIN'
         }, {
           title: 'Last Logon Date',
           dataIndex: 'LAST_LOGON_DATE',
           key: 'LAST_LOGON_DATE',
           sorter: (a, b) => a.LAST_LOGON_DATE - b.LAST_LOGON_DATE,
-          sortOrder: sortedInfo.columnKey === 'LAST_LOGON_DATE' && sortedInfo.order
+          sortOrder: sortedInfo.columnKey === 'LAST_LOGON_DATE' && sortedInfo.order,
+          className: 'LAST_LOGON_DATE'
         }, {
           title: 'Description',
           dataIndex: 'DESCRIPTION',
           key: 'DESCRIPTION',
+          className: 'DESCRIPTION'
         }];
+
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        this.setState({
+          selectedRows: selectedRows
+        }, ()=>{
+          console.log('value of state of selectedRows is : ', this.state.selectedRows);
+        })
+      },
+    };
 
 
     return (
       <div>
         <div className="gridcontainer">
-          <div style={{paddingLeft: "0", paddingRight: "0", backgroundColor: "#e8f1f5", position: "absolute", right: "5vw", top: "10vh", width: "20vw"}}>
+          <div style={{paddingLeft: "0", paddingRight: "0", backgroundColor: "#e8f1f5", position: "absolute", right: "2.5vw", top: "10vh", width: "20vw", height: "10vh"}}>
             <Card style={{backgroundColor: `#DEE0E0`}}>
               <VictoryChart
               >
@@ -234,7 +264,7 @@ class ActiveUsers extends Component {
                 style={{fontSize:12, fontWeight: "bold"}}
                 />
                 <VictoryBar
-                  style={{ data: { fill: "#fffcff", width: 30 } }}
+                  style={{ data: { fill: "#2b8ca3", width: 30 } }}
                   data={this.state.chartArr}
                   eventKey={datum=>datum.click}
                   events={[
@@ -255,98 +285,98 @@ class ActiveUsers extends Component {
                               eventKey: "0",
                               mutation: (props) => {
                                 console.log("props key color", props.style.fill);
-                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
                                   return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                               }
                             },
                             {
                               eventKey: "1",
                               mutation: (props) => {
-                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
                                   return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                               }
                             },
                             {
                               eventKey: "2",
                               mutation: (props) => {
-                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
                                   return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                               }
                             },
                             {
                               eventKey: "3",
                               mutation: (props) => {
-                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
                                   return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                               }
                             },
                             {
                               eventKey: "4",
                               mutation: (props) => {
-                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
                                   return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                               }
                             },
                             {
                               eventKey: "5",
                               mutation: (props) => {
-                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
                                   return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                               }
                             },
                             {
                               eventKey: "6",
                               mutation: (props) => {
-                                if(props.index===clickedProps.index&&props.style.fill==="#fffcff"){
+                                if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
                                   return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#fffcff"})}
+                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
                                 }
                               }
                             }
@@ -359,12 +389,46 @@ class ActiveUsers extends Component {
               </VictoryChart>
             </Card>
           </div>
-          <div className="tablebox" style={{backgroundColor: "#e8f1f5"}}>
+          <div className="tablebox" style={{backgroundColor: "#e8f1f5", marginTop: "2%"}}>
             <Table
             columns={columns}
+            rowSelection={rowSelection}
             dataSource={this.state.rawData}
+            onChange={this.handleTableChange}
             scroll={{ y: `40vh` }}
+            pagination={{ pageSize: 100 }}
             />
+          </div>
+          <div className="statbox">
+            <Card style={{backgroundColor: `#DEE0E0`}}>
+              <FlexRow>
+                <Flex1>
+                  <FlexColumn>
+                    <Flex1>
+                      <Card title="Card title" style={{marginRight: "2%", marginBottom: "2%", color: `#f53234`}}>
+                        <p>Card content</p>
+                        <p>Card content</p>
+                        <p>Card content</p>
+                      </Card>
+                    </Flex1>
+                    <Flex1>
+                      <Card title="Card title" style={{marginRight: "2%", color: `#f53234`}}>
+                        <p>Card content</p>
+                        <p>Card content</p>
+                        <p>Card content</p>
+                      </Card>
+                    </Flex1>
+                  </FlexColumn>
+                </Flex1>
+                <Flex1>
+                  <Card title="Card title" style={{height: '100%'}}>
+                    <p>Card content</p>
+                    <p>Card content</p>
+                    <p>Card content</p>
+                  </Card>
+                </Flex1>
+              </FlexRow>
+            </Card>
           </div>
         </div>
       </div>

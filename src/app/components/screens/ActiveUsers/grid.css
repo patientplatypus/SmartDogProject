@@ -8,11 +8,64 @@
 }
 
 .graphbox{
-  grid-column: 15/21;
+  grid-column: 16/21;
   grid-row: 1/3;
 }
 
 .tablebox{
   grid-column: 1/21;
   grid-row: 3/6;
+}
+
+.statbox{
+  grid-column: 1/16;
+  grid-row: 1/3;
+}
+
+th.USER_NAME,
+td.USER_NAME {
+  text-align: left !important;
+  /* background-color: red; */
+  width: 10vw;
+}
+
+th.EMPLOYEE_ID{
+  text-align: left !important;
+  width: 10vw;
+}
+td.EMPLOYEE_ID {
+  text-align: left !important;
+  /* background-color: orange; */
+  width: 10vw;
+}
+
+th.DAYS_SINCE_LAST_LOGIN{
+  text-align: left !important;
+  width: 10vw;
+}
+td.DAYS_SINCE_LAST_LOGIN {
+  text-align: left !important;
+  /* background-color: yellow; */
+  width: 10vw;
+}
+
+th.LAST_LOGON_DATE{
+  text-align: left !important;
+  width: 10vw;
+}
+td.LAST_LOGON_DATE {
+  text-align: left !important;
+  /* background-color: green; */
+  width: 10vw;
+}
+
+th.DESCRIPTION{
+  text-align: left !important;
+  /* background-color: blue; */
+  width: 10vw;
+}
+td.DESCRIPTION {
+  text-align: left !important;
+  /* background-color: violet; */
+  width: 10vw;
 }
