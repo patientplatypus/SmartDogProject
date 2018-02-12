@@ -1,0 +1,18 @@
+
+
+.gridcontainer {
+  display: grid;
+  grid-gap: 0px;
+  grid-template-columns: 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw;
+  grid-template-rows: 20vh 20vh 20vh 20vh 20vh;
+}
+
+.graphbox{
+  grid-column: 15/21;
+  grid-row: 1/3;
+}
+
+.tablebox{
+  grid-column: 1/21;
+  grid-row: 3/6;
+}

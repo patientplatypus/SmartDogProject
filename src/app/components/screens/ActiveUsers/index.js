@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   Card,
+  Table,
   Layout,
   Row,
   Col,
@@ -19,13 +20,9 @@ import './local.css';
 import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
-import "./grid.scss"
+import "./grid.css"
 import axios from 'axios';
 import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, Bar, VictoryTheme } from 'victory';
-//
-// import XLSX from 'xlsx';
-//
-// import worksheetexample from '../../sample_data/activeUsers.xlsx';
 
 
 
@@ -35,6 +32,8 @@ const {Header, Content} = Layout;
 const FormItem = Form.Item;
 
 import renderIf from 'render-if'
+
+
 
 const Flex1 = styled.div`
   flex: 1
@@ -60,7 +59,10 @@ class ActiveUsers extends Component {
       arr500: null,
       arr600: null,
       arrOver600: null,
-      clickedindexArray: []
+      clickedindexArray: [],
+      rawData: null,
+      filteredInfo: null,
+      sortedInfo: null,
     }
   }
 
@@ -89,10 +91,6 @@ class ActiveUsers extends Component {
     let over600 = 0;
 
     response.data[0].forEach((element) => {
-      //console.log(element);
-
-
-
 
       if(element.DAYS_SINCE_LAST_LOGIN < 100){
         less100++;
@@ -134,6 +132,7 @@ class ActiveUsers extends Component {
                  {x: 500,y: less500, click: "4"},
                  {x: 600,y: less600, click: "5"},
                  {x: 700,y: over600, click: "6"}],
+      rawData: response.data[0],
       arr100: temp100,
       arr200: temp200,
       arr300: temp300,
@@ -145,13 +144,10 @@ class ActiveUsers extends Component {
     }, ()=>{
       console.log("hey we are after the setState and value");
       console.log("of new chartArr is: ", this.state.chartArr);
+      console.log("value of rawData: ", this.state.rawData);
     });
 
   };
-
-  clickeIndexFunction(clickedindex){
-
-  }
 
 
   componentWillMount(){
@@ -169,13 +165,43 @@ class ActiveUsers extends Component {
   }
 
   render() {
+    let { sortedInfo, filteredInfo } = this.state;
+    sortedInfo = sortedInfo || {};
+    filteredInfo = filteredInfo || {};
+
+    const columns = [{
+          title: 'User Name',
+          dataIndex: 'USER_NAME',
+          key: 'USER_NAME',
+        }, {
+          title: 'Employe ID',
+          dataIndex: 'EMPLOYEE_ID',
+          key: 'EMPLOYEE_ID',
+          sorter: (a, b) => a.EMPLOYEE_ID - b.EMPLOYEE_ID,
+          sortOrder: sortedInfo.columnKey === 'EMPLOYEE_ID' && sortedInfo.order
+        }, {
+          title: 'Days Since Last Login',
+          dataIndex: 'DAYS_SINCE_LAST_LOGIN',
+          key: 'DAYS_SINCE_LAST_LOGIN',
+          sorter: (a, b) => a.DAYS_SINCE_LAST_LOGIN - b.DAYS_SINCE_LAST_LOGIN,
+          sortOrder: sortedInfo.columnKey === 'DAYS_SINCE_LAST_LOGIN' && sortedInfo.order
+        }, {
+          title: 'Last Logon Date',
+          dataIndex: 'LAST_LOGON_DATE',
+          key: 'LAST_LOGON_DATE',
+          sorter: (a, b) => a.LAST_LOGON_DATE - b.LAST_LOGON_DATE,
+          sortOrder: sortedInfo.columnKey === 'LAST_LOGON_DATE' && sortedInfo.order
+        }, {
+          title: 'Description',
+          dataIndex: 'DESCRIPTION',
+          key: 'DESCRIPTION',
+        }];
+
+
     return (
       <div>
-        <div className="GridContainer">
-          <h1>
-            hello there activeUsers
-          </h1>
-          <div className="graphbox" style={{paddingLeft: "0", paddingRight: "0"}}>
+        <div className="gridcontainer">
+          <div style={{paddingLeft: "0", paddingRight: "0", backgroundColor: "#e8f1f5", position: "absolute", right: "5vw", top: "10vh", width: "20vw"}}>
             <Card style={{backgroundColor: `#DEE0E0`}}>
               <VictoryChart
               >
@@ -332,6 +358,13 @@ class ActiveUsers extends Component {
                 />
               </VictoryChart>
             </Card>
+          </div>
+          <div className="tablebox" style={{backgroundColor: "#e8f1f5"}}>
+            <Table
+            columns={columns}
+            dataSource={this.state.rawData}
+            scroll={{ y: `40vh` }}
+            />
           </div>
         </div>
       </div>
