@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   Card,
+  Pagination,
   Table,
   Layout,
   Row,
@@ -68,7 +69,17 @@ class ActiveUsers extends Component {
       rawData: null,
       filteredInfo: null,
       sortedInfo: null,
-      selectedRows: []
+      selectedRows: [],
+      graphAverage: -1,
+      graphAverageTable: -1,
+      numberusers: 0,
+      numberuserstable: 0,
+      statchanged: false,
+      statchangedtable: false,
+      paginationValue: 1,
+      selectedRowKeys: [],
+      checkBoxValue: false,
+      inputValue: false
     }
   }
 
@@ -155,13 +166,164 @@ class ActiveUsers extends Component {
 
   };
 
-  handleTableChange = (pagination, filters, sorter) => {
-      console.log('Various parameters', pagination, filters, sorter);
-      this.setState({
-        filteredInfo: filters,
-        sortedInfo: sorter,
-      });
+
+
+
+  //If I want to calculate the median.
+
+  // median(values) {
+  //   values = values.slice(0).sort( function(a, b) {return a - b; } );
+  //
+  //   return middle(values);
+  // }
+  //
+  // middle(values) {
+  //   var len = values.length;
+  //   var half = Math.floor(len / 2);
+  //
+  //   if(len % 2)
+  //       return (values[half - 1] + values[half]) / 2.0;
+  //   else
+  //       return values[half];
+  // }
+
+  getDaysLastLoginStats(array){
+    let totalDays = 0;
+    let countDays = 0;
+    let averDays = 0;
+    array.forEach(element=>{
+      console.log('inside getDaysLastLoginStats array and element: ');
+      console.log(element);
+      totalDays += element.DAYS_SINCE_LAST_LOGIN;
+      countDays++;
+    })
+    averDays = totalDays/countDays;
+    return averDays;
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.selectedRowKeys!=this.state.selectedRowKeys){
+      if(nextState.selectedRowKeys.length===0){
+        this.setState({
+          graphAverageTable: -1,
+          numberuserstable: 0,
+          statchangedtable: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchangedtable: false
+            })
+          }, 500)
+        })
+      }else{
+        console.log(this.getDaysLastLoginStats(nextState.selectedRows).toFixed(0));
+        this.setState({
+          graphAverageTable: this.getDaysLastLoginStats(nextState.selectedRows).toFixed(0),
+          numberuserstable: nextState.selectedRows.length,
+          statchangedtable: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchangedtable: false
+            })
+          }, 500)
+        })
+      }
     }
+    if (nextState.clickedIndex!=this.state.clickedIndex){
+      if(nextState.clickedIndex===0){
+        this.setState({
+          graphAverage: this.getDaysLastLoginStats(this.state.arr100).toFixed(0),
+          numberusers: this.state.arr100.length,
+          statchanged: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchanged: false
+            })
+          }, 500)
+        })
+      }
+      if(nextState.clickedIndex===1){
+        this.setState({
+          graphAverage: this.getDaysLastLoginStats(this.state.arr200).toFixed(0),
+          numberusers: this.state.arr200.length,
+          statchanged: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchanged: false
+            })
+          }, 500)
+        })
+      }
+      if(nextState.clickedIndex===2){
+        this.setState({
+          graphAverage: this.getDaysLastLoginStats(this.state.arr300).toFixed(0),
+          numberusers: this.state.arr300.length,
+          statchanged: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchanged: false
+            })
+          }, 500)
+        })
+      }
+      if(nextState.clickedIndex===3){
+        this.setState({
+          graphAverage: this.getDaysLastLoginStats(this.state.arr400).toFixed(0),
+          numberusers: this.state.arr400.length,
+          statchanged: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchanged: false
+            })
+          }, 500)
+        })
+      }
+      if(nextState.clickedIndex===4){
+        this.setState({
+          graphAverage: this.getDaysLastLoginStats(this.state.arr500).toFixed(0),
+          numberusers: this.state.arr500.length,
+          statchanged: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchanged: false
+            })
+          }, 500)
+        })
+      }
+      if(nextState.clickedIndex===5){
+        this.setState({
+          graphAverage: this.getDaysLastLoginStats(this.state.arr600).toFixed(0),
+          numberusers: this.state.arr600.length,
+          statchanged: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchanged: false
+            })
+          }, 500)
+        })
+      }
+      if(nextState.clickedIndex===6){
+        this.setState({
+          graphAverage: this.getDaysLastLoginStats(this.state.arrOver600).toFixed(0),
+          numberusers: this.state.arrOver600.length,
+          statchanged: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              statchanged: false
+            })
+          }, 500)
+        })
+      }
+    }
+  }
 
 
   componentWillMount(){
@@ -178,10 +340,56 @@ class ActiveUsers extends Component {
     })
   }
 
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.setState({ selectedRowKeys, selectedRows });
+  }
+
+  handleTableChange = (pagination, filters, sorter) => {
+      console.log('value of pagination: ', pagination);
+      console.log('Various parameters', pagination, filters, sorter);
+      if (pagination.current!=this.state.paginationValue){
+        this.setState({
+          selectedRowKeys: [],
+          filteredInfo: filters,
+          sortedInfo: sorter,
+          paginationValue: pagination.current
+        })
+      }else{
+        this.setState({
+          filteredInfo: filters,
+          sortedInfo: sorter,
+          paginationValue: pagination.current
+        });
+      }
+    }
+
+  checkBoxChange(){
+    console.log('inside checkBoxValue');
+    this.setState({
+      checkBoxValue: !this.state.checkBoxValue
+    })
+  }
+  inputChange(e){
+    console.log('inside inputChange');
+    this.setState({
+      inputValue: e.target.value
+    })
+  }
+  alertCreator(){
+    console.log("inside alert creator!");
+  }
+
   render() {
     let { sortedInfo, filteredInfo } = this.state;
     sortedInfo = sortedInfo || {};
     filteredInfo = filteredInfo || {};
+
+    const { selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
 
     const columns = [{
           title: 'User Name',
@@ -216,17 +424,6 @@ class ActiveUsers extends Component {
           className: 'DESCRIPTION'
         }];
 
-    const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        this.setState({
-          selectedRows: selectedRows
-        }, ()=>{
-          console.log('value of state of selectedRows is : ', this.state.selectedRows);
-        })
-      },
-    };
-
 
     return (
       <div>
@@ -240,7 +437,7 @@ class ActiveUsers extends Component {
                   height={400}
                   domain={[0, 700]}
                   tickValues={[100, 200, 300, 400, 500, 600, 700]}
-                  tickFormat={["100", "200", "300", "400", "500", "600", "700+"]}
+                  tickFormat={["<100", "<200", "<300", "<400", "<500", "<600", "700+"]}
                   theme={VictoryTheme.material}
                   standalone={false}
                 />
@@ -391,43 +588,77 @@ class ActiveUsers extends Component {
           </div>
           <div className="tablebox" style={{backgroundColor: "#e8f1f5", marginTop: "2%"}}>
             <Table
-            columns={columns}
-            rowSelection={rowSelection}
-            dataSource={this.state.rawData}
-            onChange={this.handleTableChange}
-            scroll={{ y: `40vh` }}
-            pagination={{ pageSize: 100 }}
+              columns={columns}
+              onChange={this.handleTableChange}
+              rowSelection={rowSelection}
+              dataSource={this.state.rawData}
+              scroll={{ y: `40vh` }}
+              pagination={{ pageSize: 100 }}
             />
           </div>
-          <div className="statbox">
-            <Card style={{backgroundColor: `#DEE0E0`}}>
-              <FlexRow>
-                <Flex1>
-                  <FlexColumn>
-                    <Flex1>
-                      <Card title="Card title" style={{marginRight: "2%", marginBottom: "2%", color: `#f53234`}}>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                      </Card>
-                    </Flex1>
-                    <Flex1>
-                      <Card title="Card title" style={{marginRight: "2%", color: `#f53234`}}>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                      </Card>
-                    </Flex1>
-                  </FlexColumn>
-                </Flex1>
-                <Flex1>
-                  <Card title="Card title" style={{height: '100%'}}>
-                    <p>Card content</p>
-                    <p>Card content</p>
-                    <p>Card content</p>
-                  </Card>
-                </Flex1>
-              </FlexRow>
+          <div className="statboxtopright" style={{backgroundColor: "#e8f1f5"}}>
+            <Card title="Graph Stats" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
+              {renderIf(this.state.graphAverage===-1)(
+                <div>
+                  <p>
+                    Click on the graph to get the average value of the days!
+                  </p>
+                </div>
+              )}
+              {renderIf(this.state.graphAverage!=-1)(
+                <div className={ this.state.statchanged ? "statChanger" : "" }>
+                  <p>
+                    Average value of days: {this.state.graphAverage}
+                  </p>
+                  <p>
+                    The number of users that this bar is polling: {this.state.numberusers}
+                  </p>
+                </div>
+              )}
+            </Card>
+          </div>
+          <div className="statboxbottomright" style={{backgroundColor: "#e8f1f5"}}>
+            <Card title="Table Stats" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
+              {renderIf(this.state.graphAverageTable===-1)(
+                <div>
+                  <p>
+                    Click on the table to get the average value of the days!
+                  </p>
+                </div>
+              )}
+              {renderIf(this.state.graphAverageTable!=-1)(
+                <div className={ this.state.statchangedtable ? "statChanger" : "" }>
+                  <p>
+                    Average value of days: {this.state.graphAverageTable}
+                  </p>
+                  <p>
+                    The number of users clicked in table: {this.state.numberuserstable}
+                  </p>
+                </div>
+              )}
+            </Card>
+          </div>
+          <div className="statboxleft" style={{backgroundColor: "#e8f1f5"}}>
+            <Card title="Alert Creation" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%"}}>
+              <div>
+                <p>
+                  In this toolbox, you can create an alert. These alerts will populate the home page if there are users that fit the criteria.
+                </p>
+              </div>
+              <br/>
+              <Card style={{backgroundColor: "#e8f1f5"}}>
+                <p>
+                   <Checkbox onChange={()=>{this.checkBoxChange()}}>Alert me of top 3 users most overdue.</Checkbox>
+                </p>
+              </Card>
+              <br/>
+              <Card  style={{backgroundColor: "#e8f1f5"}}>
+                <p>
+                  Alert me of the of the users greater than <Input placeholder="some number" onChange={(e)=>{this.inputChange(e)}} style={{width: "10%", textAlign: "right"}}/> days overdue.
+                </p>
+              </Card>
+              <br/>
+              <Button style={{float: "right", backgroundColor: "#2b8ca3", color: "#fffcff"}} onClick={()=>{this.alertCreator()}}>Create Alert!</Button>
             </Card>
           </div>
         </div>
@@ -453,3 +684,49 @@ export default (connect(
     mapStateToProps, mapDispatchToProps)(
     ActiveUsers
 ))
+
+
+
+// <Card style={{backgroundColor: `#DEE0E0`}}>
+//   <FlexRow>
+//     <Flex1>
+//       <FlexColumn>
+//         <Flex1>
+//           <Card title="Card title" style={{marginRight: "2%", marginBottom: "2%", color: `#f53234`}}>
+//             <p>Card content</p>
+//             <p>Card content</p>
+//             <p>Card content</p>
+//           </Card>
+//         </Flex1>
+//         <Flex1>
+//           <Card title="Card title" style={{marginRight: "2%", color: `#f53234`}}>
+//             <p>Card content</p>
+//             <p>Card content</p>
+//             <p>Card content</p>
+//           </Card>
+//         </Flex1>
+//       </FlexColumn>
+//     </Flex1>
+//     <Flex1>
+//       <Card title="Card title" style={{height: '100%'}}>
+//         <p>Card content</p>
+//         <p>Card content</p>
+//         <p>Card content</p>
+//       </Card>
+//     </Flex1>
+//   </FlexRow>
+// </Card>
+  // pagination={{ pageSize: this.state.rawData.length }}
+
+
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  //     this.setState({
+  //       selectedRows: selectedRows,
+  //       selectedRowKeys: selectedRowKeys
+  //     }, ()=>{
+  //       console.log('value of state of selectedRows is : ', this.state.selectedRows);
+  //     })
+  //   },
+  // };
