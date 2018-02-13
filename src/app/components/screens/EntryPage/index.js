@@ -46,22 +46,65 @@ const FlexColumn = styled.div`
 
 
 class EntryPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       redirect: null,
-      top3ActiveUsers: [],
-      daysOverActiveUsers: []
+      activeUser1Name: null,
+      activeUser1Days: null,
+      activeUser2Name: null,
+      activeUser2Days: null,
+      activeUser3Name: null,
+      activeUser3Days: null,
+      daysOverdue: null,
+      daysOverActiveUsers: [],
+      daysActiveUsers: []
     }
   }
 
-  buttonClicked(value){
-    console.log('inside button clicked and value: ', value);
-
-  }
+  // componentWillReceiveProps(nextProps){
+  //   console.log('inside Entry componentWillReceiveProps and nextProps.top3ActiveUsers: ', nextProps);
+  //   if (this.props.top3ActiveUsers!=nextProps.top3ActiveUsers){
+  //     console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+  //     console.log('value of top3ActiveUsers is: ', nextProps.top3ActiveUsers);
+  //     this.setState({
+  //       activeUser1Name:this.state.top3ActiveUsers[0]["USER_NAME"],
+  //       activeUser1Days:this.state.top3ActiveUsers[0]["DAYS_SINCE_LAST_LOGIN"],
+  //       activeUser2Name:this.state.top3ActiveUsers[1]["USER_NAME"],
+  //       activeUser2Days:this.state.top3ActiveUsers[1]["DAYS_SINCE_LAST_LOGIN"],
+  //       activeUser3Name:this.state.top3ActiveUsers[2]["USER_NAME"],
+  //       activeUser3Days:this.state.top3ActiveUsers[2]["DAYS_SINCE_LAST_LOGIN"],
+  //     }, ()=>{
+  //       console.log('after setstate and activeUser1Name: ', this.state.activeUser1Name);
+  //     })
+  //   }
+  // }
 
   componentWillMount(){
-
+    if(this.props.top3ActiveUsers.length>0){
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      console.log('this is the value of this.props.top3ActiveUsers: ', this.props.top3ActiveUsers);
+      this.setState({
+        activeUser1Name:this.props.top3ActiveUsers[0]["USER_NAME"],
+        activeUser1Days:this.props.top3ActiveUsers[0]["DAYS_SINCE_LAST_LOGIN"],
+        activeUser2Name:this.props.top3ActiveUsers[1]["USER_NAME"],
+        activeUser2Days:this.props.top3ActiveUsers[1]["DAYS_SINCE_LAST_LOGIN"],
+        activeUser3Name:this.props.top3ActiveUsers[2]["USER_NAME"],
+        activeUser3Days:this.props.top3ActiveUsers[2]["DAYS_SINCE_LAST_LOGIN"],
+      }, ()=>{
+        console.log('after setstate and activeUser1Name: ', this.state.activeUser1Name);
+      })
+    }
+    if(this.props.daysOverdue!=null){
+      this.setState({
+        daysOverdue: this.props.daysOverdue
+      })
+    }
+    if(this.props.daysActiveUsers!=null){
+      this.setState({
+        daysActiveUsers: this.props.daysActiveUsers
+      })
+    }
   }
 
   render() {
@@ -70,7 +113,46 @@ class EntryPage extends Component {
       <div>
         <div className="gridcontainer">
           <div className="alertboxholder">
-            <Card title="Alerts!" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
+            <Card title="Alerts!" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginRight: "1%", marginTop: "1%", fontSize:"10pt"}}>
+              <Card title="Active Users" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginRight: "1%", fontSize:"10pt"}}>
+                {renderIf(this.state.activeUser1Name!=null)(
+                  <div>
+                    <p>
+                      Top 3 Users By Days Since Last Logon:
+                    </p>
+                    <p>
+                      User1: {this.state.activeUser1Name}, Days Since Logon: {this.state.activeUser1Days}
+                    </p>
+                    <p>
+                      User2: {this.state.activeUser2Name}, Days Since Logon: {this.state.activeUser2Days}
+                    </p>
+                    <p>
+                      User3: {this.state.activeUser3Name}, Days Since Logon: {this.state.activeUser3Days}
+                    </p>
+                    <br/>
+                  </div>
+                )}
+                {renderIf(this.state.daysOverdue!=null)(
+                  <div>
+                    <p>
+                      Users that are more than {this.props.daysOverdue} days overdue:
+                    </p>
+                  </div>
+                )}
+                {renderIf(this.state.daysActiveUsers.length!=0)(
+                  <div style={{height: "10vh", backgroundColor: "#f53234", overflow: "hidden", overflowY: "scroll", fontWeight: "bold"}}>
+                    {
+                       Array.from({ length: this.state.daysActiveUsers.length }, (_, i) =>
+                        <div>
+                          <p>
+                            Name: {this.state.daysActiveUsers[i]["USER_NAME"]}
+                          </p>
+                        </div>
+                      )
+                    }
+                  </div>
+                )}
+              </Card>
             </Card>
           </div>
         </div>
