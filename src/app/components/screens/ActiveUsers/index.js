@@ -413,6 +413,7 @@ class ActiveUsers extends Component {
     })
     this.props.setDaysActiveUsers(sendArr)
     this.props.setTop3ActiveUsers(this.state.top3sorted)
+    this.props.setDaysOverdue(this.state.inputValue)
   }
 
   render() {

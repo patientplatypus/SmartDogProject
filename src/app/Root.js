@@ -66,14 +66,18 @@ class Root extends Component {
     this.state = {
       current: 'splash',
       top3ActiveUsers: [],
-      daysActiveUsers: []
+      daysActiveUsers: [],
+      daysOverdue: null
     }
   }
 
   setTop3ActiveUsers(value){
     console.log('inside setTop3ActiveUsers and value: ', value);
     this.setState({
-      top3top3ActiveUsers: value
+      top3ActiveUsers: value
+    }, ()=>{
+      console.log('******************************');
+      console.log('value of state after setting top3ActiveUsers: ', this.state.top3ActiveUsers);
     })
   }
 
@@ -81,6 +85,13 @@ class Root extends Component {
     console.log('inside setDaysActiveUsers and value ', value);
     this.setState({
       daysActiveUsers: value
+    })
+  }
+
+  setDaysOverdue(value){
+    console.log('inside setDaysOverdue and value ', value);
+    this.setState({
+      daysOverdue: value
     })
   }
 
@@ -127,6 +138,7 @@ class Root extends Component {
                <EntryPage
                top3ActiveUsers={this.state.top3ActiveUsers}
                daysActiveUsers={this.state.daysActiveUsers}
+               daysOverdue={this.state.daysOverdue}
                />
              </div>
            )}
@@ -136,6 +148,7 @@ class Root extends Component {
                <EntryPage
                top3ActiveUsers={this.state.top3ActiveUsers}
                daysActiveUsers={this.state.daysActiveUsers}
+               daysOverdue={this.state.daysOverdue}
                />
              </div>
            )}
@@ -144,6 +157,7 @@ class Root extends Component {
              <div>
                <ActiveUsers setTop3ActiveUsers={this.setTop3ActiveUsers.bind(this)}
                setDaysActiveUsers={this.setDaysActiveUsers.bind(this)}
+               setDaysOverdue={this.setDaysOverdue.bind(this)}
                />
              </div>
            )}

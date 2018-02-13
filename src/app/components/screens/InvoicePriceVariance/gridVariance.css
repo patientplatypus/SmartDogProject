@@ -1,0 +1,14 @@
+
+
+.gridcontainer {
+  display: grid;
+  grid-gap: 0px;
+  grid-template-columns: 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw;
+  grid-template-rows: 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh;
+}
+
+.graphboxtopleft {
+  grid-column: 1/16;
+  grid-row: 1/10;
+  overflow: hidden;
+}

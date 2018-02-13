@@ -20,7 +20,8 @@ import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
 import axios from 'axios';
-import "./grid.scss"
+import "./gridVariance.css"
+import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, Bar, VictoryTheme, VictoryZoomContainer, VictoryStack, VictoryScatter, VictoryArea } from 'victory';
 //
 // import XLSX from 'xlsx';
 //
@@ -46,17 +47,63 @@ const FlexColumn = styled.div`
 `
 
 
+
 class InvoicePriceVariance extends Component {
   constructor() {
     super();
     this.state = {
-      redirect: null
+      redirect: null,
+      chartArr: []
     }
   }
 
-  buttonClicked(value){
-    console.log('inside button clicked and value: ', value);
+  transformData(response){
+    let tempChartArr = [];
+    let tempLinArr = [];
+    let tempVarArr = [];
+    let yMax = 0;
+    let yMin = 0;
+    let counter = 0;
+    response.data[0].forEach((element)=>{
+      let vendorName = element["VENDOR_NAME"]
 
+      let linePrice = element["INVOICE_LINE_PRICE"]
+      let priceVariance = element["INVOICE_PRICE_VARIANCE"]
+
+      // console.log('value of element: ', element);
+      // console.log('value of priceVariance: ', priceVariance);
+      // if(priceVariance<yMin){
+      //   yMin = priceVariance;
+      // }
+      // if(priceVariance>yMax){
+      //   yMax = priceVariance;
+      // }
+      // tempChartArr.push({
+      //   x: counter,
+      //   y: priceVariance,
+      // })
+      tempLinArr.push({
+        x: counter,
+        y: linePrice
+      })
+      tempVarArr.push({
+        x: counter,
+        y: priceVariance
+      })
+      counter++;
+    })
+    this.setState({
+      chartArr: tempChartArr,
+      linArr: tempLinArr,
+      varArr: tempVarArr,
+      xMax: counter,
+      yMax: yMax,
+      yMin: yMin
+    }, ()=>{
+      console.log('after setState and yMax: ', this.state.yMax, ' yMin: ', this.state.yMin);
+      console.log('value of charArr: ', this.state.chartArr);
+      console.log('value of tempChartArr: ', tempChartArr);
+    })
   }
 
   componentWillMount(){
@@ -66,6 +113,7 @@ class InvoicePriceVariance extends Component {
     })
     .then((response)=>{
       console.log("value of response: ", response);
+      this.transformData(response)
     })
     .catch((error)=>{
       console.log("value of error: ", error);
@@ -75,11 +123,41 @@ class InvoicePriceVariance extends Component {
   render() {
     return (
       <div>
-        <div className="GridContainer">
-          <h1>
-            hello there invoicePriceVariance
-          </h1>
-          <div className="graphbox">
+        <div className="gridcontainer">
+          <div className="graphboxtopleft" style={{backgroundColor: "purple"}}>
+
+            <VictoryChart
+              width={1800}
+              height={400}
+              containerComponent={
+                <VictoryZoomContainer
+                allowZoom={false}
+                zoomDomain={{x: [0,1000]}}/>
+              }
+            >
+            <VictoryAxis
+                domain={[0, 1000]}
+                tickValues={[100, 200, 300, 400, 500, 600, 700, 800, 900, 999]}
+                tickFormat={[`100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`, `1000`]}
+                theme={VictoryTheme.material}
+                standalone={false}
+              />
+              <VictoryAxis dependentAxis
+                  domain={[-100, 6000]}
+                  theme={VictoryTheme.material}
+                  standalone={false}
+                />
+                <VictoryStack>
+                  <VictoryArea
+                    style={{ data: { fill: "#2b8ca3", width: 30 } }}
+                    data={this.state.linArr}
+                  />
+                  <VictoryArea
+                    style={{ data: { fill: "#f53234", width: 30 } }}
+                    data={this.state.varArr}
+                  />
+                </VictoryStack>
+            </VictoryChart>
           </div>
         </div>
       </div>
