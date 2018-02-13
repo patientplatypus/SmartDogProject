@@ -64,8 +64,24 @@ class Root extends Component {
   constructor(props){
     super(props);
     this.state = {
-      current: 'splash'
+      current: 'splash',
+      top3ActiveUsers: [],
+      daysActiveUsers: []
     }
+  }
+
+  setTop3ActiveUsers(value){
+    console.log('inside setTop3ActiveUsers and value: ', value);
+    this.setState({
+      top3top3ActiveUsers: value
+    })
+  }
+
+  setDaysActiveUsers(value){
+    console.log('inside setDaysActiveUsers and value ', value);
+    this.setState({
+      daysActiveUsers: value
+    })
   }
 
   handleClick = (e) => {
@@ -106,16 +122,29 @@ class Root extends Component {
                </Menu.Item>
            </Menu>
 
+           {renderIf(this.state.current==='splash')(
+             <div>
+               <EntryPage
+               top3ActiveUsers={this.state.top3ActiveUsers}
+               daysActiveUsers={this.state.daysActiveUsers}
+               />
+             </div>
+           )}
 
            {renderIf(this.state.current==='EntryPage')(
              <div>
-               <EntryPage />
+               <EntryPage
+               top3ActiveUsers={this.state.top3ActiveUsers}
+               daysActiveUsers={this.state.daysActiveUsers}
+               />
              </div>
            )}
 
            {renderIf(this.state.current==='ActiveUsers')(
              <div>
-               <ActiveUsers />
+               <ActiveUsers setTop3ActiveUsers={this.setTop3ActiveUsers.bind(this)}
+               setDaysActiveUsers={this.setDaysActiveUsers.bind(this)}
+               />
              </div>
            )}
 

@@ -19,7 +19,7 @@ import './local.css';
 import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
-import "./grid.scss"
+import "./grid.css"
 //
 // import XLSX from 'xlsx';
 //
@@ -49,7 +49,9 @@ class EntryPage extends Component {
   constructor() {
     super();
     this.state = {
-      redirect: null
+      redirect: null,
+      top3ActiveUsers: [],
+      daysOverActiveUsers: []
     }
   }
 
@@ -63,13 +65,15 @@ class EntryPage extends Component {
   }
 
   render() {
-    
+
     return (
       <div>
-        <h1>
-          hello there EntryPage
-
-        </h1>
+        <div className="gridcontainer">
+          <div className="alertboxholder">
+            <Card title="Alerts!" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
+            </Card>
+          </div>
+        </div>
       </div>
     );
   }
