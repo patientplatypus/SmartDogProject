@@ -1,0 +1,48 @@
+
+
+.gridcontainer {
+  display: grid;
+  grid-gap: 0px;
+  grid-template-columns: 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw;
+  grid-template-rows: 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh;
+}
+
+.graphbox{
+  grid-column: 16/21;
+  grid-row: 1/6;
+}
+
+.tablebox{
+  grid-column: 1/21;
+  grid-row: 9/21;
+}
+
+.statbox{
+  grid-column: 1/16;
+  grid-row: 1/9;
+  overflow: hidden;
+}
+
+.statboxtopright{
+  grid-column: 8/16;
+  grid-row: 1/4;
+  overflow: hidden;
+}
+
+.statboxbottomright{
+  grid-column: 8/16;
+  grid-row: 4/9;
+  overflow: hidden;
+}
+
+.statboxleft{
+  grid-column: 1/8;
+  grid-row: 1/9;
+  overflow: hidden;
+}
+
+.alertboxholder{
+  grid-column: 16/21;
+  grid-row: 1/21;
+  overflow: hidden;
+}

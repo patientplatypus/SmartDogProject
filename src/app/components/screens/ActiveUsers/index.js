@@ -79,14 +79,23 @@ class ActiveUsers extends Component {
       paginationValue: 1,
       selectedRowKeys: [],
       checkBoxValue: false,
-      inputValue: false
+      inputValue: false,
+      top3sorted: []
     }
   }
 
-  buttonClicked(value){
-    console.log('inside button clicked and value: ', value);
+  sortByKeyHighLow(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+    });
   }
-
+  sortByKeyLowHigh(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+    });
+  }
 
   transformData(response){
 
@@ -162,6 +171,10 @@ class ActiveUsers extends Component {
       console.log("hey we are after the setState and value");
       console.log("of new chartArr is: ", this.state.chartArr);
       console.log("value of rawData: ", this.state.rawData);
+      this.setState({
+        lowHighSort: this.sortByKeyLowHigh(this.state.rawData, "DAYS_SINCE_LAST_LOGIN"),
+        highLowSort: this.sortByKeyHighLow(this.state.rawData, "DAYS_SINCE_LAST_LOGIN")
+      })
     });
 
   };
@@ -364,20 +377,42 @@ class ActiveUsers extends Component {
       }
     }
 
+
+
   checkBoxChange(){
     console.log('inside checkBoxValue');
     this.setState({
       checkBoxValue: !this.state.checkBoxValue
+    }, ()=>{
+      if (this.state.checkBoxValue===true){
+        this.setState({
+          top3sorted: [this.state.highLowSort[0], this.state.highLowSort[1], this.state.highLowSort[2]]
+        })
+      }else{
+        this.setState({
+          top3sorted: [null, null, null]
+        })
+      }
     })
   }
+
   inputChange(e){
     console.log('inside inputChange');
     this.setState({
       inputValue: e.target.value
     })
   }
+
   alertCreator(){
     console.log("inside alert creator!");
+    let sendArr = [];
+    this.state.lowHighSort.forEach(element=>{
+      if (element["DAYS_SINCE_LAST_LOGIN"] > this.state.inputValue){
+        sendArr.push(element)
+      }
+    })
+    this.props.setDaysActiveUsers(sendArr)
+    this.props.setTop3ActiveUsers(this.state.top3sorted)
   }
 
   render() {
@@ -597,7 +632,7 @@ class ActiveUsers extends Component {
             />
           </div>
           <div className="statboxtopright" style={{backgroundColor: "#e8f1f5"}}>
-            <Card title="Graph Stats" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
+            <Card title="Graph Statistics" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
               {renderIf(this.state.graphAverage===-1)(
                 <div>
                   <p>
@@ -618,7 +653,7 @@ class ActiveUsers extends Component {
             </Card>
           </div>
           <div className="statboxbottomright" style={{backgroundColor: "#e8f1f5"}}>
-            <Card title="Table Stats" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
+            <Card title="Table Statistics" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1%", fontSize:"10pt"}}>
               {renderIf(this.state.graphAverageTable===-1)(
                 <div>
                   <p>
