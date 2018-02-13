@@ -59,6 +59,29 @@ class EarlyPayments extends Component {
 
   }
 
+
+
+  transformData(response){
+
+    let amountSorted = response.data[0].slice();
+    let daysSorted = response.data[0].slice();
+
+
+
+    amountSorted.sort((a, b) => {
+      return a.INV_PAYMENT_AMT - b.INV_PAYMENT_AMT;
+    });
+
+    daysSorted.sort((a, b) => {
+      return a.DAYS_PAID_EARLY - b.DAYS_PAID_EARLY;
+    });
+
+    
+
+    console.log(amountSorted[603]);
+
+  }
+
   componentWillMount(){
     var url = "http://localhost:5000/workbook/"
     axios.post(url,{
@@ -66,11 +89,38 @@ class EarlyPayments extends Component {
     })
     .then((response)=>{
       console.log("value of response: ", response);
+      this.transformData(response);
     })
     .catch((error)=>{
       console.log("value of error: ", error);
     })
   }
+
+
+   mergeSortTopDown(array) {
+      if(array.length < 2) {
+        return array;
+      }
+
+      var middle = Math.floor(array.length / 2);
+      var left = array.slice(0, middle);
+      var right = array.slice(middle);
+
+      return mergeTopDown(mergeSortTopDown(left), mergeSortTopDown(right));
+    }
+     mergeTopDown(left, right) {
+      var array = [];
+
+      while(left.length && right.length) {
+        if(left[0] < right[0]) {
+          array.push(left.shift());
+        } else {
+          array.push(right.shift());
+        }
+      }
+      return array.concat(left.slice()).concat(right.slice());
+    }
+
 
   render() {
     return (
