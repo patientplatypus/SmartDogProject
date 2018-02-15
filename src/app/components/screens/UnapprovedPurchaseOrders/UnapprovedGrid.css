@@ -1,0 +1,14 @@
+
+
+.gridcontainer {
+  display: grid;
+  grid-gap: 0px;
+  grid-template-columns: 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw 5vw;
+  grid-template-rows: 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh;
+}
+
+.piebox1{
+  grid-column: 1/8;
+  grid-row: 1/8;
+  background-color: #DEE0E0;
+}

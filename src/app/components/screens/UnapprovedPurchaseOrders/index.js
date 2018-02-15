@@ -20,11 +20,8 @@ import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
 import axios from 'axios';
-import "./grid.scss"
-//
-// import XLSX from 'xlsx';
-//
-// import worksheetexample from '../../sample_data/activeUsers.xlsx';
+import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, Bar, VictoryTheme, VictoryPie } from 'victory';
+import "./UnapprovedGrid.css"
 
 
 
@@ -50,12 +47,39 @@ class UnapprovedPurchaseOrders extends Component {
   constructor() {
     super();
     this.state = {
-      redirect: null
+      redirect: null,
+      tempPieData: null
     }
   }
 
-  buttonClicked(value){
-    console.log('inside button clicked and value: ', value);
+  transformData(response){
+    // AUTHORIZATION_STATUS: "REQUIRES REAPPROVAL"
+    // BILLED: 2
+    // LAST_UPDATE_DATE: 42788
+    // PO_NUMBER: "CHE042204"
+    // QTY_ORDERED: 2
+    // RECEIVED: 2
+    // USER_NAME: "EMPL04"
+    // VENDOR_NAME: "FROMAN PROPANE CO INC"
+    let tempTotalArr = [];
+    let tempReapprovalArr = [];
+    let tempRejectedArr = [];
+    let tempPieData = [];
+    response.data[0].forEach(element=>{
+      console.log('value of element: ', element);
+      if (element.AUTHORIZATION_STATUS==='REQUIRES REAPPROVAL'){
+        tempTotalArr.push(element);
+        tempReapprovalArr.push(element);
+      }else if(element.AUTHORIZATION_STATUS==='REJECTED'){
+        tempTotalArr.push(element);
+        tempRejectedArr.push(element);
+      }
+
+    })
+
+    this.setState({
+      pieData: [{x: `Requires Reapproval: ${tempReapprovalArr.length}%`, y: tempReapprovalArr.length}, {x: `Re`, y: tempRejectedArr.length}]
+    })
 
   }
 
@@ -66,6 +90,7 @@ class UnapprovedPurchaseOrders extends Component {
     })
     .then((response)=>{
       console.log("value of response: ", response);
+      this.transformData(response);
     })
     .catch((error)=>{
       console.log("value of error: ", error);
@@ -75,11 +100,12 @@ class UnapprovedPurchaseOrders extends Component {
   render() {
     return (
       <div>
-        <div className="GridContainer">
-          <h1>
-            hello there unapprovedPurchaseOrders
-          </h1>
-          <div className="graphbox">
+        <div className="gridcontainer">
+          <div className="piebox1">
+            <VictoryPie
+              colorScale={["#f53234", "#2b8ca3"]}
+              data={this.state.pieData}
+            />
           </div>
         </div>
       </div>
