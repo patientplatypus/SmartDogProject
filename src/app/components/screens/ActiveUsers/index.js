@@ -205,8 +205,8 @@ class ActiveUsers extends Component {
     let countDays = 0;
     let averDays = 0;
     array.forEach(element=>{
-      console.log('inside getDaysLastLoginStats array and element: ');
-      console.log(element);
+      // console.log('inside getDaysLastLoginStats array and element: ');
+      // console.log(element);
       totalDays += element.DAYS_SINCE_LAST_LOGIN;
       countDays++;
     })
@@ -499,7 +499,7 @@ class ActiveUsers extends Component {
                 <VictoryBar
                   style={{ data: { fill: "#2b8ca3", width: 30 } }}
                   data={this.state.chartArr}
-                  eventKey={datum=>datum.click}
+                  eventKey={(datum)=>datum.click}
                   events={[
                     {
                       target: "data",
@@ -507,39 +507,42 @@ class ActiveUsers extends Component {
                       eventHandlers: {
                         onClick: (evt, clickedProps) => {
                           const clickedIndex = clickedProps.index
-                          console.log('value of evt: ', evt);
                           this.setState({
                             clickedIndex: clickedIndex
                           }, ()=>{
-                            console.log('after setstate and clickedIndex: ', this.state.clickedIndex);
+                            // console.log('after setstate and clickedIndex: ', this.state.clickedIndex);
                           })
                           return [
                             {
                               eventKey: "0",
                               mutation: (props) => {
                                 console.log("props key color", props.style.fill);
+                                console.log('value of clickedProps.index: ', clickedProps.index);
+                                console.log('value of props.index: ', props.index);
                                 if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
-                                }
-                                if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
-                                }
-                                if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
+                                }else if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
+                                  return {style: {fill: "#f53234", width: 30 }}
+                                }else if(props.index!=clickedProps.index){
+                                  console.log('inside != &&&&&&&&&&');
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                               }
                             },
                             {
                               eventKey: "1",
                               mutation: (props) => {
+                                console.log("props key color", props.style.fill);
+                                console.log('value of clickedProps.index: ', clickedProps.index);
+                                console.log('value of props.index: ', props.index);
                                 if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
+                                  return {style: {fill: "#f53234", width: 30 }}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                               }
                             },
@@ -547,13 +550,13 @@ class ActiveUsers extends Component {
                               eventKey: "2",
                               mutation: (props) => {
                                 if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
+                                  return {style: {fill: "#f53234", width: 30 }}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                               }
                             },
@@ -561,13 +564,13 @@ class ActiveUsers extends Component {
                               eventKey: "3",
                               mutation: (props) => {
                                 if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
+                                  return {style: {fill: "#f53234", width: 30 }}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                               }
                             },
@@ -575,13 +578,13 @@ class ActiveUsers extends Component {
                               eventKey: "4",
                               mutation: (props) => {
                                 if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
+                                  return {style: {fill: "#f53234", width: 30 }}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                               }
                             },
@@ -589,13 +592,13 @@ class ActiveUsers extends Component {
                               eventKey: "5",
                               mutation: (props) => {
                                 if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
+                                  return {style: {fill: "#f53234", width: 30 }}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return  {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                               }
                             },
@@ -603,13 +606,13 @@ class ActiveUsers extends Component {
                               eventKey: "6",
                               mutation: (props) => {
                                 if(props.index===clickedProps.index&&props.style.fill==="#f53234"){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                                 if(props.index===clickedProps.index&&props.style.fill==="#2b8ca3"){
-                                  return {style: Object.assign(props.style, {fill: "#f53234"})}
+                                  return {style: {fill: "#f53234", width: 30 }}
                                 }
                                 if(props.index!=clickedProps.index){
-                                  return {style: Object.assign(props.style, {fill: "#2b8ca3"})}
+                                  return  {style: {fill: "#2b8ca3", width: 30 }}
                                 }
                               }
                             }
@@ -720,49 +723,3 @@ export default (connect(
     mapStateToProps, mapDispatchToProps)(
     ActiveUsers
 ))
-
-
-
-// <Card style={{backgroundColor: `#DEE0E0`}}>
-//   <FlexRow>
-//     <Flex1>
-//       <FlexColumn>
-//         <Flex1>
-//           <Card title="Card title" style={{marginRight: "2%", marginBottom: "2%", color: `#f53234`}}>
-//             <p>Card content</p>
-//             <p>Card content</p>
-//             <p>Card content</p>
-//           </Card>
-//         </Flex1>
-//         <Flex1>
-//           <Card title="Card title" style={{marginRight: "2%", color: `#f53234`}}>
-//             <p>Card content</p>
-//             <p>Card content</p>
-//             <p>Card content</p>
-//           </Card>
-//         </Flex1>
-//       </FlexColumn>
-//     </Flex1>
-//     <Flex1>
-//       <Card title="Card title" style={{height: '100%'}}>
-//         <p>Card content</p>
-//         <p>Card content</p>
-//         <p>Card content</p>
-//       </Card>
-//     </Flex1>
-//   </FlexRow>
-// </Card>
-  // pagination={{ pageSize: this.state.rawData.length }}
-
-
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  //     this.setState({
-  //       selectedRows: selectedRows,
-  //       selectedRowKeys: selectedRowKeys
-  //     }, ()=>{
-  //       console.log('value of state of selectedRows is : ', this.state.selectedRows);
-  //     })
-  //   },
-  // };

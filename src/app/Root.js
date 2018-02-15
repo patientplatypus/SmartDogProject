@@ -72,24 +72,24 @@ class Root extends Component {
   }
 
   setTop3ActiveUsers(value){
-    console.log('inside setTop3ActiveUsers and value: ', value);
+    // console.log('inside setTop3ActiveUsers and value: ', value);
     this.setState({
       top3ActiveUsers: value
     }, ()=>{
-      console.log('******************************');
-      console.log('value of state after setting top3ActiveUsers: ', this.state.top3ActiveUsers);
+      // console.log('******************************');
+      // console.log('value of state after setting top3ActiveUsers: ', this.state.top3ActiveUsers);
     })
   }
 
   setDaysActiveUsers(value){
-    console.log('inside setDaysActiveUsers and value ', value);
+    // console.log('inside setDaysActiveUsers and value ', value);
     this.setState({
       daysActiveUsers: value
     })
   }
 
   setDaysOverdue(value){
-    console.log('inside setDaysOverdue and value ', value);
+    // console.log('inside setDaysOverdue and value ', value);
     this.setState({
       daysOverdue: value
     })

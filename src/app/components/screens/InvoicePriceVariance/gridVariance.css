@@ -7,8 +7,49 @@
   grid-template-rows: 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh 5vh;
 }
 
-.graphboxtopleft {
+.graphboxleft {
   grid-column: 1/16;
-  grid-row: 1/10;
+  grid-row: 1/21;
   overflow: hidden;
+}
+
+.alertboxright {
+  grid-column: 16/21;
+  grid-row: 1/21;
+  overflow: hidden;
+}
+
+.invisibleCheck{
+  opacity: 0;
+  font-size: 10px;
+  color: #f53234;
+}
+
+.statChangeCheck {
+  animation: statChangeNoticeCheck 1s linear;
+  width: 100%;
+  text-align: left;
+  animation-fill-mode: forwards;
+}
+@keyframes statChangeNoticeCheck {
+ 0% {
+   color: #f53234;
+   opacity: 1;
+   font-size: 10px;
+ }
+ 60% {
+   opacity: 1;
+   font-size: 40px;
+   color: #f53234;
+ }
+ 80% {
+   opacity: 0.9;
+   font-size: 50px;
+   color: #f53234;
+ }
+ 100% {
+   opacity: 1;
+   font-size: 40px;
+   color: #f53234;
+ }
 }

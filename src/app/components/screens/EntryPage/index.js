@@ -82,8 +82,8 @@ class EntryPage extends Component {
 
   componentWillMount(){
     if(this.props.top3ActiveUsers.length>0){
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      console.log('this is the value of this.props.top3ActiveUsers: ', this.props.top3ActiveUsers);
+      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      // console.log('this is the value of this.props.top3ActiveUsers: ', this.props.top3ActiveUsers);
       this.setState({
         activeUser1Name:this.props.top3ActiveUsers[0]["USER_NAME"],
         activeUser1Days:this.props.top3ActiveUsers[0]["DAYS_SINCE_LAST_LOGIN"],
