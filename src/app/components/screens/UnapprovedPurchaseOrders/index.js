@@ -59,12 +59,13 @@ class UnapprovedPurchaseOrders extends Component {
       rejectedBilledSorted: [],
       rejectedQtyOrderedSorted: [],
       rejectedReceivedSorted: [],
-      alertArray1:[],
-      alertArray2:[],
-      alertArray3:[],
-      alertArray4:[],
-      alertArray5:[],
-      alertArray6:[],
+      alertArray: [],
+      iconTypereapprovalBilledSorted: ["ellipsis", "ellipsis", "ellipsis", "ellipsis", "ellipsis"],
+      iconTypereapprovalQtyOrderedSorted: ["ellipsis", "ellipsis", "ellipsis", "ellipsis", "ellipsis"],
+      iconTypereapprovalReceivedSorted: ["ellipsis", "ellipsis", "ellipsis", "ellipsis", "ellipsis"],
+      iconTyperejectedBilledSorted: ["ellipsis", "ellipsis", "ellipsis", "ellipsis", "ellipsis"],
+      iconTyperejectedQtyOrderedSorted: ["ellipsis", "ellipsis", "ellipsis", "ellipsis", "ellipsis"],
+      iconTyperejectedReceivedSorted: ["ellipsis", "ellipsis", "ellipsis", "ellipsis", "ellipsis"]
     }
   }
 
@@ -75,8 +76,31 @@ class UnapprovedPurchaseOrders extends Component {
     });
   }
 
-  handleTimeline(array, number){
-    console.log("array ", array, " number ", number);
+  arrays_equal(a,b) { return !!a && !!b && !(a<b || b<a); }
+
+  handleTimeline(value){
+    console.log('inside handleTimeline and value: ', value);
+    let removedoldArr = this.state.alertArray.filter(element => element != value);
+    if (this.arrays_equal(removedoldArr, this.state.alertArray)){
+      removedoldArr.push(value)
+      this.setState({
+        alertArray: removedoldArr
+      }, ()=>{
+        console.log('after setState and alertArray (AFTER PUTIN): ', this.state.alertArray);
+      })
+    }else{
+      this.setState({
+        alertArray: removedoldArr
+      }, ()=>{
+        console.log('after setState and alertArray (AFTER TAKEOUT): ', this.state.alertArray);
+      })
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    // if (nextState.alertArray != this.state.alertArray){
+    //   console.log('inside componentWillUpdate and nextState.alertArray: ', nextState.alertArray);
+    // }
   }
 
 
@@ -205,6 +229,35 @@ class UnapprovedPurchaseOrders extends Component {
                 />
             </VictoryChart>
           </div>
+          <div className="alertBoxUnapproved">
+            <Card title="Alerts" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "7.5%", marginTop: "3.5%"}}>
+              {renderIf(this.state.alertArray.length===0)(
+                <div>
+                  <p>
+                    You have not yet flagged any alerts.
+                  </p>
+                </div>
+              )}
+              {renderIf(this.state.alertArray.length!=0)(
+                <div>
+                  <div>
+                    <p>
+                      Here are the items you have flagged:
+                    </p>
+                  </div>
+                  {
+                    Array.from({length: this.state.alertArray.length}, (_, i)=>
+                      <div>
+                        <p>
+                          {this.state.alertArray[i]}
+                        </p>
+                      </div>
+                    )
+                  }
+                </div>
+              )}
+            </Card>
+          </div>
           <div className='approvalTimeline' style={{backgroundColor: '#e8f1f5'}}>
             <Card title="Awaiting Approval Items" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "7.5%", marginTop: "5%"}}>
               <Tabs defaultActiveKey="1">
@@ -213,8 +266,23 @@ class UnapprovedPurchaseOrders extends Component {
                     <Timeline>
                         {
                            Array.from({ length: this.state.reapprovalBilledSorted.length }, (_, i) =>
-                            <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />}
-                            style={{cursor: "pointer"}} onClick={()=>{this.handleTimeline(1, i)}}>
+                            <Timeline.Item dot={<Icon type={this.state.iconTypereapprovalBilledSorted[i]} style={{ fontSize: '16px', paddingLeft: "10%", color: this.state.iconTypereapprovalBilledSorted[i]==="check-circle"?"#f53234":"#2b8ca3"}} />}
+                            style={{cursor: "pointer"}} onClick={()=>{
+                              this.handleTimeline(`Vendor Name: ${this.state.reapprovalBilledSorted[i]["VENDOR_NAME"]}, Billed: ${this.state.reapprovalBilledSorted[i]["BILLED"]}`)
+                              if (this.state.iconTypereapprovalBilledSorted[i] === "ellipsis"){
+                                let tempArr = this.state.iconTypereapprovalBilledSorted
+                                tempArr[i] = "check-circle"
+                                this.setState({
+                                  iconTypereapprovalBilledSorted: tempArr,
+                                })
+                              }else{
+                                let tempArr = this.state.iconTypereapprovalBilledSorted
+                                tempArr[i] = "ellipsis"
+                                this.setState({
+                                  iconTypereapprovalBilledSorted: tempArr,
+                                })
+                              }
+                            }}>
                               <p>
                                 Vendor Name: {this.state.reapprovalBilledSorted[i]["VENDOR_NAME"]}
                               </p>
@@ -232,7 +300,22 @@ class UnapprovedPurchaseOrders extends Component {
                     <Timeline>
                         {
                            Array.from({ length: this.state.reapprovalQtyOrderedSorted.length }, (_, i) =>
-                            <Timeline.Item  style={{cursor: "pointer"}} onClick={()=>{this.handleTimeline(2, i)}}>
+                            <Timeline.Item  dot={<Icon type={this.state.iconTypereapprovalQtyOrderedSorted[i]} style={{ fontSize: '16px', paddingLeft: "10%", color:this.state.iconTypereapprovalQtyOrderedSorted[i]==="check-circle"?"#f53234":"#2b8ca3"}} />}  style={{cursor: "pointer"}} onClick={()=>{
+                              this.handleTimeline(`Vendor Name: ${this.state.reapprovalQtyOrderedSorted[i]["VENDOR_NAME"]}, Qty Ordered: ${this.state.reapprovalQtyOrderedSorted[i]["QTY_ORDERED"]}`)
+                              if (this.state.iconTypereapprovalQtyOrderedSorted[i] === "ellipsis"){
+                                let tempArr = this.state.iconTypereapprovalQtyOrderedSorted
+                                tempArr[i] = 'check-circle'
+                                this.setState({
+                                  iconTypereapprovalQtyOrderedSorted: tempArr
+                                })
+                              }else{
+                                let tempArr = this.state.iconTypereapprovalQtyOrderedSorted
+                                tempArr[i] = "ellipsis"
+                                this.setState({
+                                  iconTypereapprovalQtyOrderedSorted: tempArr
+                                })
+                              }
+                            }}>
                               <p>
                                 Vendor Name: {this.state.reapprovalQtyOrderedSorted[i]["VENDOR_NAME"]}
                               </p>
@@ -250,12 +333,28 @@ class UnapprovedPurchaseOrders extends Component {
                     <Timeline>
                         {
                            Array.from({ length: this.state.reapprovalReceivedSorted.length }, (_, i) =>
-                            <Timeline.Item style={{cursor: "pointer"}} onClick={()=>{this.handleTimeline(3 ,i)}}>
+                            <Timeline.Item   dot={<Icon type={this.state.iconTypereapprovalReceivedSorted[i]}
+                            style={{paddingLeft: "10%", fontSize: '16px', color:this.state.iconTypereapprovalReceivedSorted[i]==="check-circle"?"#f53234":"#2b8ca3"}} />} style={{cursor:"pointer"}} onClick={()=>{
+                              this.handleTimeline(`Vendor Name: ${this.state.reapprovalReceivedSorted[i]["VENDOR_NAME"]}, Received: ${this.state.reapprovalReceivedSorted[i]["RECEIVED"]}`)
+                              if (this.state.iconTypereapprovalReceivedSorted[i] === "ellipsis"){
+                                let tempArr = this.state.iconTypereapprovalReceivedSorted
+                                tempArr[i] = 'check-circle'
+                                this.setState({
+                                  iconTypereapprovalReceivedSorted: tempArr
+                                })
+                              }else{
+                                let tempArr = this.state.iconTypereapprovalReceivedSorted
+                                tempArr[i] = "ellipsis"
+                                this.setState({
+                                  iconTypereapprovalReceivedSorted: tempArr
+                                })
+                              }
+                            }}>
                               <p>
                                 Vendor Name: {this.state.reapprovalReceivedSorted[i]["VENDOR_NAME"]}
                               </p>
                               <p>
-                                Received: {this.state.reapprovalReceivedSorted[i]["QTY_ORDERED"]}
+                                Received: {this.state.reapprovalReceivedSorted[i]["RECEIVED"]}
                               </p>
                             </Timeline.Item>
                           )
@@ -274,7 +373,22 @@ class UnapprovedPurchaseOrders extends Component {
                     <Timeline>
                         {
                            Array.from({ length: this.state.rejectedBilledSorted.length }, (_, i) =>
-                            <Timeline.Item style={{cursor: "pointer"}} onClick={()=>{this.handleTimeline(4, i)}}>
+                            <Timeline.Item dot={<Icon type={this.state.iconTyperejectedBilledSorted[i]} style={{cursor: "pointer", fontSize: '16px', paddingLeft: "10%", color:this.state.iconTyperejectedBilledSorted[i]==="check-circle"?"#f53234":"#2b8ca3"}}/>} style={{cursor: "pointer"}} onClick={()=>{
+                              this.handleTimeline(`Vendor Name: ${this.state.rejectedBilledSorted[i]["VENDOR_NAME"]}, Billed: ${this.state.rejectedBilledSorted[i]["BILLED"]}`)
+                              if (this.state.iconTyperejectedBilledSorted[i] === "ellipsis"){
+                                let tempArr = this.state.iconTyperejectedBilledSorted
+                                tempArr[i] = 'check-circle'
+                                this.setState({
+                                  iconTyperejectedBilledSorted: tempArr
+                                })
+                              }else{
+                                let tempArr = this.state.iconTyperejectedBilledSorted
+                                tempArr[i] = "ellipsis"
+                                this.setState({
+                                  iconTyperejectedBilledSorted: tempArr
+                                })
+                              }
+                            }}>
                               <p>
                                 Vendor Name: {this.state.rejectedBilledSorted[i]["VENDOR_NAME"]}
                               </p>
@@ -292,7 +406,22 @@ class UnapprovedPurchaseOrders extends Component {
                     <Timeline>
                         {
                            Array.from({ length: this.state.rejectedQtyOrderedSorted.length }, (_, i) =>
-                            <Timeline.Item style={{cursor: "pointer"}} onClick={()=>{this.handleTimeline(5, i)}}>
+                            <Timeline.Item dot={<Icon type={this.state.iconTyperejectedQtyOrderedSorted[i]} style={{cursor: "pointer", fontSize: '16px', paddingLeft: "10%", color:this.state.iconTyperejectedQtyOrderedSorted[i]==="check-circle"?"#f53234":"#2b8ca3"}}/>} style={{cursor: "pointer"}} onClick={()=>{
+                              this.handleTimeline(`Vendor Name: ${this.state.rejectedQtyOrderedSorted[i]["VENDOR_NAME"]}, Qty Ordered: ${this.state.rejectedQtyOrderedSorted[i]["QTY_ORDERED"]}`)
+                              if (this.state.iconTyperejectedQtyOrderedSorted[i] === "ellipsis"){
+                                let tempArr = this.state.iconTyperejectedQtyOrderedSorted
+                                tempArr[i] = 'check-circle'
+                                this.setState({
+                                  iconTyperejectedQtyOrderedSorted: tempArr
+                                })
+                              }else{
+                                let tempArr = this.state.iconTyperejectedQtyOrderedSorted
+                                tempArr[i] = "ellipsis"
+                                this.setState({
+                                  iconTyperejectedQtyOrderedSorted: tempArr
+                                })
+                              }
+                            }}>
                               <p>
                                 Vendor Name: {this.state.rejectedQtyOrderedSorted[i]["VENDOR_NAME"]}
                               </p>
@@ -310,12 +439,27 @@ class UnapprovedPurchaseOrders extends Component {
                     <Timeline>
                         {
                            Array.from({ length: this.state.rejectedReceivedSorted.length }, (_, i) =>
-                            <Timeline.Item style={{cursor: "pointer"}} onClick={()=>{this.handleTimeline(6, i)}}>
+                            <Timeline.Item dot={<Icon type={this.state.iconTyperejectedReceivedSorted[i]} style={{cursor: "pointer",  fontSize: '16px', paddingLeft: "10%", color:this.state.iconTyperejectedReceivedSorted[i]==="check-circle"?"#f53234":"#2b8ca3"}}/>} style={{cursor: "pointer"}} onClick={()=>{
+                              this.handleTimeline(`Vendor Name: ${this.state.rejectedReceivedSorted[i]["VENDOR_NAME"]}, Received: ${this.state.rejectedReceivedSorted[i]["RECEIVED"]}`)
+                              if (this.state.iconTyperejectedReceivedSorted[i] === "ellipsis"){
+                                let tempArr = this.state.iconTyperejectedReceivedSorted
+                                tempArr[i] = 'check-circle'
+                                this.setState({
+                                  iconTyperejectedReceivedSorted: tempArr
+                                })
+                              }else{
+                                let tempArr = this.state.iconTyperejectedReceivedSorted
+                                tempArr[i] = "ellipsis"
+                                this.setState({
+                                  iconTyperejectedReceivedSorted: tempArr
+                                })
+                              }
+                            }}>
                               <p>
                                 Vendor Name: {this.state.rejectedReceivedSorted[i]["VENDOR_NAME"]}
                               </p>
                               <p>
-                                Received: {this.state.rejectedReceivedSorted[i]["QTY_ORDERED"]}
+                                Received: {this.state.rejectedReceivedSorted[i]["RECEIVED"]}
                               </p>
                             </Timeline.Item>
                           )

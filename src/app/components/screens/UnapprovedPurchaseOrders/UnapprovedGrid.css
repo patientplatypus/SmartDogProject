@@ -36,3 +36,8 @@
   grid-row: 8/19;
   background-color: #DEE0E0;
 }
+
+.alertBoxUnapproved{
+  grid-column: 1/8;
+  grid-row: 8/19;
+}
