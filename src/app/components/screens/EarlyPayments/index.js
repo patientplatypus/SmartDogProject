@@ -52,7 +52,15 @@ class EarlyPayments extends Component {
   constructor() {
     super();
     this.state = {
-      redirect: null
+      redirect: null,
+      sortedArr: [],
+      amountSorted: [],
+      impactSorted: [],
+      rawData: [],
+      amountArr: [],
+      impactArr: [],
+      amountArrLine: [],
+      impactArrLine: []
     }
   }
 
@@ -80,6 +88,7 @@ class EarlyPayments extends Component {
     let amountUnder60 = [];
     let amountUnder80 = [];
     let amountUnder100 = [];
+
 
     // let daysUnder20 = [];
     // let daysUnder40 = [];
@@ -115,17 +124,17 @@ class EarlyPayments extends Component {
 
 
 
-    // amountSorted.sort((a, b) => {
-    //   return a.INV_PAYMENT_AMT - b.INV_PAYMENT_AMT;
-    // });
+    amountSorted.sort((a, b) => {
+      return a.INV_PAYMENT_AMT - b.INV_PAYMENT_AMT;
+    });
 
     daysSorted.sort((a, b) => {
       return a.DAYS_PAID_EARLY - b.DAYS_PAID_EARLY;
     });
 
-    // impactSorted.sort((a, b) => {
-    //   return a.NEGATIVE_CASH_IMPACT - b.NEGATIVE_CASH_IMPACT;
-    // });
+    impactSorted.sort((a, b) => {
+      return a.NEGATIVE_CASH_IMPACT - b.NEGATIVE_CASH_IMPACT;
+    });
 
     daysSorted.forEach((element, index) => {
       if(index <= (amountSorted.length * 0.2)){
@@ -177,21 +186,27 @@ class EarlyPayments extends Component {
       daysVsImpactLine.push({x: index, y: element.NEGATIVE_CASH_IMPACT});
     });
 
-    console.log("DaysAmount");
+
+
+    console.log("TEST1" + daysSorted);
 
     this.setState({
-      sortedArr: daysSorted,
+      sortedArr: daysSorted
+    });
+
+    console.log("TEST 2" + daysSorted);
+    this.setState({
+      amountSorted: amountSorted,
+      impactSorted: impactSorted,
       rawData: response.data[0],
       amountArr: daysVsAmount,
       impactArr: daysVsImpact,
       amountArrLine: daysVsAmountLine,
       impactArrLine: daysVsImpactLine,
-
-
-
-    }, ()=>{
-      
     });
+
+
+    console.log("TEST 3 state" + this.state.sortedArr);
 
   }
 
@@ -203,6 +218,7 @@ class EarlyPayments extends Component {
     .then((response)=>{
       console.log("value of response: ", response);
       this.transformData(response);
+
     })
     .catch((error)=>{
       console.log("value of error: ", error);
@@ -237,14 +253,38 @@ class EarlyPayments extends Component {
 
   render() {
     return (
-      <div>
-        <div style={{position: "relative", width: "100%", height: "100%"}}>
-          <h1>
-            hello there earlyPayments
-          </h1>
-          <div style={{position: "absolute", top: "5vh", right: "5vw", left: "70vw", backgroundColor: "grey"}}>
-            <svg viewBox="0 0 450 350">
-              <VictorySharedEvents
+      <div class="graphContainer" style={{height: "50vh", width: "100vw",display: "flex", flexDirection: "row"}}>
+          
+            <div class="lineGraph" style={{ backgroundColor: "blue", flex: "2"}}>
+          
+              <VictoryChart 
+              width={800} 
+              height={400}
+              domain={{x: [0, 700],y: [0, 9000]}}
+              >
+                <VictoryGroup
+                  style={{
+                    data: { strokeWidth: 3, fillOpacity: 0.4 }
+                  }}
+                >
+                  <VictoryArea
+                    style={{
+                      data: { fill: "cyan", stroke: "cyan" }
+                    }}
+                    data={this.state.impactArrLine}
+                  />
+                  <VictoryArea
+                    style={{
+                      data: { fill: "magenta", stroke: "magenta" }
+                    }}
+                    data={this.state.impactArrLine}
+                  />
+                </VictoryGroup>
+              </VictoryChart>
+            </div>
+
+          <div class="circleAndBar" style={{backgroundColor: "red",flex: "3"}}>
+            <VictorySharedEvents
                 events={[{
                   childName: ["pie", "bar"],
                   target: "data",
@@ -297,7 +337,7 @@ class EarlyPayments extends Component {
                     labelComponent={<VictoryLabel y={280}/>}
                   />
                 </g>
-                <g transform={"translate(0, -75)"}>
+                <g transform={"translate(-65, -75)"}>
                   <VictoryPie name="pie"
                     width={250}
                     standalone={false}
@@ -306,37 +346,14 @@ class EarlyPayments extends Component {
                   />
                 </g>
               </VictorySharedEvents>
-            </svg>
           </div>
-          <div style={{position: "absolute", top: "5vh", right: "30vw", left: "45vw", backgroundColor: "grey"}}>
-            <VictoryChart width={400} height={400}>
-              <VictoryGroup
-                style={{
-                  data: { strokeWidth: 3, fillOpacity: 0.4 }
-                }}
-              >
-                <VictoryArea
-                  style={{
-                    data: { fill: "cyan", stroke: "cyan" }
-                  }}
-                  data={this.state.amountArrLine}
-                />
-                <VictoryArea
-                  style={{
-                    data: { fill: "magenta", stroke: "magenta" }
-                  }}
-                  data={this.state.impactArrLine}
-                />
-              </VictoryGroup>
-            </VictoryChart>
-          </div>
-        </div>
+
       </div>
     );
   }
 }
 
-
+  
 function mapDispatchToProps(dispatch) {
     return({
       //  checkloginoci: (e)=>{dispatch(checkLoginOCI(e))},

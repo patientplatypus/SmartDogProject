@@ -8,7 +8,7 @@
 }
 
 .graphbox{
-  grid-column: 15/21;
+  grid-column: 12/21;
   grid-row: 1/4;
   background-color: #f53234;
 }
