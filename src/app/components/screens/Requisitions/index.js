@@ -20,7 +20,8 @@ import GreenCloud from '../../../style/images/GreenCloud.png';
 import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
 import axios from 'axios';
-import "./grid.scss"
+import "./grid.scss";
+
 //
 // import XLSX from 'xlsx';
 //
@@ -54,6 +55,10 @@ class Requisitions extends Component {
     }
   }
 
+
+  
+
+
   buttonClicked(value){
     console.log('inside button clicked and value: ', value);
 
@@ -61,6 +66,7 @@ class Requisitions extends Component {
 
   componentWillMount(){
     var url = "http://localhost:5000/workbook/"
+    var url2 = "http://localhost:5000/requisition/"
     axios.post(url,{
       workbookName: "requisitions"
     })
@@ -69,7 +75,16 @@ class Requisitions extends Component {
     })
     .catch((error)=>{
       console.log("value of error: ", error);
+    });
+
+    axios.get(url2)
+    .then(function (response) {
+      console.log(response);
     })
+    .catch(function (error) {
+      console.log(error);
+    });
+
   }
 
   render() {

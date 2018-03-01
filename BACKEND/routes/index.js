@@ -56,4 +56,9 @@ router.post('/workbook', function(req, res, next) {
   res.status("200").send(returndata)
 });
 
+router.get('/requisition', function(req, res, next) {
+    console.log("requisition route called on backend");
+    res.status("200").send("hi");
+});
+
 module.exports = router;

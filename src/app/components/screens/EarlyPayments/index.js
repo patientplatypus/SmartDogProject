@@ -10,7 +10,7 @@ import {
   Layout,
   Row,
   Col,
-  Menu
+  Menu,
 } from 'antd';
 import {headStyles, cardStyles, contentStyles, medusa, layoutStyles} from '../../../style/MainStyles.js';
 import { connect } from 'react-redux';
@@ -35,7 +35,8 @@ import { checkLoginOCI } from '../../../redux';
 const {Header, Content} = Layout;
 const FormItem = Form.Item;
 
-import renderIf from 'render-if'
+import renderIf from 'render-if';
+import EarlyPaymentTable from './earlyPaymentTable';
 
 const Flex1 = styled.div`
   flex: 1
@@ -60,7 +61,17 @@ class EarlyPayments extends Component {
       amountArr: [],
       impactArr: [],
       amountArrLine: [],
-      impactArrLine: []
+      impactArrLine: [],
+      tableArr: [],
+      top3: [],
+      assignedTop3: false,
+      vendorName1: "",
+      vendorName2: "",
+      vendorName3: "",
+      value1: 0,
+      value2: 0,
+      value3: 0,
+
     }
   }
 
@@ -73,6 +84,8 @@ class EarlyPayments extends Component {
 
   transformData(response){
 
+    //console.log("RAW DATA: " + response.data[0].slice());
+
     let amountSorted = response.data[0].slice();
     let daysSorted = response.data[0].slice();
     let impactSorted = response.data[0].slice();
@@ -80,8 +93,11 @@ class EarlyPayments extends Component {
     let daysVsAmount = [];
     let daysVsImpact = [];
 
+    let top3 = [];
+
     let daysVsAmountLine = [];
     let daysVsImpactLine = [];
+    let tableArr = [];
 
     let amountUnder20 = [];
     let amountUnder40 = [];
@@ -184,29 +200,49 @@ class EarlyPayments extends Component {
     daysSorted.forEach((element, index) => {
       daysVsAmountLine.push({x: index, y: element.INV_PAYMENT_AMT});
       daysVsImpactLine.push({x: index, y: element.NEGATIVE_CASH_IMPACT});
+      tableArr.push({ key: index, 
+                      name: element.VENDOR_NAME, 
+                      daysEarly: element.DAYS_PAID_EARLY, 
+                      paymentAmount: element.INV_PAYMENT_AMT,
+                      negImpact: element.NEGATIVE_CASH_IMPACT,
+                    });
     });
 
 
+    top3.push(impactSorted[impactSorted.length - 1]);
+    top3.push(impactSorted[impactSorted.length - 2]);
+    top3.push(impactSorted[impactSorted.length - 3]);
 
-    console.log("TEST1" + daysSorted);
+
+    //console.log("TEST1" + daysSorted);
 
     this.setState({
       sortedArr: daysSorted
     });
 
-    console.log("TEST 2" + daysSorted);
+    //console.log("TEST 2" + daysSorted);
     this.setState({
       amountSorted: amountSorted,
       impactSorted: impactSorted,
       rawData: response.data[0],
       amountArr: daysVsAmount,
       impactArr: daysVsImpact,
+      top3: top3,
       amountArrLine: daysVsAmountLine,
       impactArrLine: daysVsImpactLine,
+      tableArr: tableArr,
+      assignedTop3: true,
+      vendorName1: top3[0].VENDOR_NAME,
+      vendorName2: top3[1].VENDOR_NAME,
+      vendorName3: top3[2].VENDOR_NAME,
+      value1: top3[0].NEGATIVE_CASH_IMPACT,
+      value2: top3[1].NEGATIVE_CASH_IMPACT,
+      value3: top3[2].NEGATIVE_CASH_IMPACT,
     });
 
+    console.log("TOp 3" + this.state.top3[0].VENDOR_NAME);
 
-    console.log("TEST 3 state" + this.state.sortedArr);
+    //console.log("TABLE ARRAY" + this.state.tableArr);
 
   }
 
@@ -223,6 +259,12 @@ class EarlyPayments extends Component {
     .catch((error)=>{
       console.log("value of error: ", error);
     })
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if(nextState.top3 !== this.state.top3){
+      console.log("NEXT STATE " +   nextState.top3);
+    }
   }
 
 
@@ -253,101 +295,90 @@ class EarlyPayments extends Component {
 
   render() {
     return (
-      <div class="graphContainer" style={{height: "50vh", width: "100vw",display: "flex", flexDirection: "row"}}>
-          
-            <div class="lineGraph" style={{ backgroundColor: "blue", flex: "2"}}>
-          
-              <VictoryChart 
-              width={800} 
-              height={400}
-              domain={{x: [0, 700],y: [0, 9000]}}
-              >
-                <VictoryGroup
-                  style={{
-                    data: { strokeWidth: 3, fillOpacity: 0.4 }
-                  }}
+
+      <div style={{ height: "100%", width: "100%" }}>
+        <div class="graphContainer" style={{height: "250px", width: "100vw", display: "flex", flexDirection: "row", justifyContent: "flex-start"}}>
+            
+              <div class="lineGraph" style={{ backgroundColor: "grey", flex: "3", width: "100vw"}}>
+            
+                <VictoryChart 
+                width={800} 
+                height={400}
+                domain={{x: [0, 800],y: [0, 9000]}}
                 >
-                  <VictoryArea
-                    style={{
-                      data: { fill: "cyan", stroke: "cyan" }
-                    }}
-                    data={this.state.impactArrLine}
-                  />
-                  <VictoryArea
-                    style={{
-                      data: { fill: "magenta", stroke: "magenta" }
-                    }}
-                    data={this.state.impactArrLine}
-                  />
-                </VictoryGroup>
-              </VictoryChart>
-            </div>
+                <VictoryAxis
+                  width={800}
+                  height={400}
+                  domain={[0, 800]}
 
-          <div class="circleAndBar" style={{backgroundColor: "red",flex: "3"}}>
-            <VictorySharedEvents
-                events={[{
-                  childName: ["pie", "bar"],
-                  target: "data",
-                  eventHandlers: {
-                    onMouseOver: () => {
-                      return [{
-                        childName: ["pie", "bar"],
-                        mutation: (props) => {
-                          return {
-                            style: Object.assign({}, props.style, {fill: "tomato"})
-                          };
-                        }
-                      }];
-                    },
-                    onMouseOut: () => {
-                      return [{
-                        childName: ["pie", "bar"],
-                        mutation: () => {
-                          return null;
-                        }
-                      }];
-                    }
-                  }
-                }]}
-              >
-                <g transform={"translate(150, 50)"}>
-                  <VictoryAxis 
-                    width={300}
-                    height={300}
-                    domain={[0, 100]}
-                    theme={VictoryTheme.material}
-                    standalone={false}
-                  />
-                  <VictoryAxis dependentAxis 
-                    width={300}
-                    height={300}
-                    domain={[0, 10]}
-                    theme={VictoryTheme.material}
-                    standalone={false}
-                  />
-                  <VictoryBar name="bar"
-                    width={300}
-                    standalone={false}
+                  theme={VictoryTheme.material}
+                  standalone={false}
+                />
+                <VictoryAxis dependentAxis
+                  width={400}
+                  height={400}
+                  domain={[0, 10000]}
+                  theme={VictoryTheme.material}
+                  standalone={false}
+                />
+                <VictoryLabel
+                text={["Days Paid Late"]}
+                x={400} y={385}
+                style={{fontSize:12, fontWeight: "bold"}}
+                />
+                <VictoryLabel
+                text={["Negative Cash Impact"]}
+                x={-30} y={300}
+                angle={270}
+                style={{fontSize:12, fontWeight: "bold"}}
+                />
+                  <VictoryGroup
                     style={{
-                      data: { width: 20 },
-                      labels: {fontSize: 25}
+                      data: { strokeWidth: 3, fillOpacity: 0.4 }
                     }}
-                    data={this.state.amountArr}
-                    labels={["20", "40", "60", "80", "100"]}
-                    labelComponent={<VictoryLabel y={280}/>}
-                  />
-                </g>
-                <g transform={"translate(-65, -75)"}>
-                  <VictoryPie name="pie"
-                    width={250}
-                    standalone={false}
-                    style={{ labels: {fontSize: 25, padding: 10}}}
-                    data={this.state.impactArr}
-                  />
-                </g>
-              </VictorySharedEvents>
-          </div>
+                  >
+                    <VictoryArea
+                      style={{
+                        data: { fill: "cyan", stroke: "cyan" }
+                      }}
+                      data={this.state.impactArrLine}
+                    />
+                    <VictoryArea
+                      style={{
+                        data: { fill: "magenta", stroke: "magenta" }
+                      }}
+                      data={this.state.impactArrLine}
+                    />
+                  </VictoryGroup>
+                </VictoryChart>
+              </div>
 
+              <div style={{flex: "2"}}>
+                <div style={{ background: '#ECECEC', padding: '30px' }}>
+                  <Card title="Top 3 Impacting Accounts" bordered={false} style={{ width: "100%" }}>
+                    {renderIf(this.state.top3[0] !== undefined)(
+                      <div>
+                        
+                        <p>{this.state.vendorName1 + " - $" + this.state.value1}</p>
+                        <p>{this.state.vendorName2 + " - $" + this.state.value2}</p>
+                        <p>{this.state.vendorName3 + " - $" + this.state.value3}</p>
+                       
+                      </div>
+                    )}
+                  </Card>
+                </div>
+              </div>
+        </div>
+
+
+        <div style={{height: "500px", width: "100%", backgroundColor: "whiteSmoke" }}>
+          {renderIf(this.state.tableArr.length )(
+                  <div>
+            <EarlyPaymentTable tableData={this.state.tableArr}/>
+                    
+                  </div>
+                )}
+        </div>
       </div>
     );
   }
