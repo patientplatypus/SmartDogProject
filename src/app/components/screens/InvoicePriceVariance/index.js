@@ -309,7 +309,11 @@ class InvoicePriceVariance extends Component {
               </Flex1>
               <Flex1>
                 <Card title="Alert" style={{color: `#2b8ca3`, height: "100%", width: "100%", lineHeight:"2vh", marginLeft: "1%", marginTop: "1.5%", fontSize:"10pt", height: "30vh"}}>
-
+                  <div>
+                    <p>
+                      Currently a place holder for alert functionality.
+                    </p>
+                  </div>
                 </Card>
               </Flex1>
             </FlexColumn>

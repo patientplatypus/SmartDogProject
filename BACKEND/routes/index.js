@@ -6,6 +6,40 @@ var XLSX = require('xlsx');
 var oracledb = require('oracledb');
 
 
+var oracledb = require('oracledb');
+
+var connAttrs = {
+    "user":"sdsoci",
+    "password":"Divcomp1!",
+    "connectString":"129.146.0.159/apexdev"
+}
+
+router.get('/oracledb', function (req, res) {
+   "use strict";
+   oracledb.getConnection(connAttrs, function (err, connection) {
+    if (err) {
+       // Error connecting to DB
+       res.set('Content-Type', 'application/json');
+       res.status(500).send(JSON.stringify({
+           status: 500,
+           message: "Error connecting to DB",
+           detailed_message: err.message
+       }))
+    }
+    else{
+      console.log('Successfully connected to Oracle Database');
+      connection.execute(
+        `SELECT * FROM REQ_IN_WAIT`,
+        function(err, result){
+          if (err){console.log("THERE WAS AN ERROR CONNECTING TO ORACLEDB")}
+          // var jsonRet = JSON.parse(result.rows)
+          console.log(result.rows)
+        }
+      )
+    }
+  })
+});
+
 /* GET home page. */
 
 // https://stackoverflow.com/questions/30859901/parse-xlsx-with-node-and-create-json
