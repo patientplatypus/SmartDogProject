@@ -21,6 +21,10 @@ import DoctorSplash from '../../../style/images/doctorsplashkeyboard.jpg';
 import styled from 'styled-components';
 import axios from 'axios';
 import "./grid.scss";
+import InProcessReqs from './inProcessReqs';
+import PreApprovedReqs from './preApprovedReqs';
+
+
 
 //
 // import XLSX from 'xlsx';
@@ -47,16 +51,72 @@ const FlexColumn = styled.div`
 `
 
 
+
+
 class Requisitions extends Component {
   constructor() {
     super();
     this.state = {
-      redirect: null
+      redirect: null,
+      rows: [],
+      formattedRows: [],
+      inProcessRows: [],
+      preApprovedRows: [],
     }
   }
 
 
   
+  
+  
+  transformData(res) {
+
+    let tempArr = [];
+    let tempArr2 = [];
+    let tempArr3 = [];
+
+    res.forEach((element, index) => {
+      tempArr.push({
+        requisitionNum: element[0],
+        authorizationStatus: element[1],
+        requisitionType: element[2],
+        preparer: element[3],
+        creator: element[4],
+        lastUpdateDate: element[5],
+      });
+
+      if(element[1] === "IN PROCESS"){
+        tempArr2.push({
+          requisitionNum: element[0],
+          authorizationStatus: element[1],
+          requisitionType: element[2],
+          preparer: element[3],
+          creator: element[4],
+          lastUpdateDate: element[5],
+        });
+      }
+      else {
+        tempArr3.push({
+          requisitionNum: element[0],
+          authorizationStatus: element[1],
+          requisitionType: element[2],
+          preparer: element[3],
+          creator: element[4],
+          lastUpdateDate: element[5],
+        });
+      }
+
+    });
+
+
+      //console.log("TEST1: "+ tempArr2);
+    this.setState({
+      formattedRows: tempArr,
+      inProcessRows: tempArr2,
+      preApprovedRows: tempArr3,
+    });
+
+  }
 
 
   buttonClicked(value){
@@ -65,41 +125,68 @@ class Requisitions extends Component {
   }
 
   componentWillMount(){
-    var url = "http://localhost:5000/workbook/"
+    // var url = "http://localhost:5000/workbook/"
+    // var url2 = "http://localhost:5000/requisition/"
+    // axios.post(url,{
+    //   workbookName: "requisitions"
+    // })
+    // .then((response)=>{
+    //   console.log("value of response: ", response);
+    // })
+    // .catch((error)=>{
+    //   console.log("value of error: ", error);
+    // });
+
     var url2 = "http://localhost:5000/requisition/"
-    axios.post(url,{
-      workbookName: "requisitions"
-    })
-    .then((response)=>{
-      console.log("value of response: ", response);
-    })
-    .catch((error)=>{
-      console.log("value of error: ", error);
-    });
 
     axios.get(url2)
-    .then(function (response) {
-      console.log(response);
+    .then((response) => {
+      console.log("RETURNED DB RESPONSE: " + response);
+      this.setState({
+        rows: response,
+      }, () => {
+        console.log(this.state.rows);
+        this.transformData(response.data);
+      });
     })
     .catch(function (error) {
       console.log(error);
     });
 
+
+
   }
+
+ 
+
+
+  
+
+
+
+
+
+
+
 
   render() {
     return (
       <div>
-        <div className="GridContainer">
-          <h1>
-            hello there Requisitions
-          </h1>
-          <div className="graphbox">
+        {renderIf(this.state.inProcessRows.length )(
+          <div>
+          <p>In Process </p>
+            <div style={{height: "45vh", width: "100vw", overflow: "hidden"}}>
+              <InProcessReqs tableData={this.state.inProcessRows} />
+            </div>
+            <div style={{height: "45vh", width: "100vw", overflow: "hidden"}}>
+              <PreApprovedReqs tableData={this.state.preApprovedRows} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
+
 }
 
 

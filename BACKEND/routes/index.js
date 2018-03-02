@@ -1,7 +1,10 @@
 var express = require('express');
+var app = express();
 var router = express.Router();
 var path = require("path");
 var XLSX = require('xlsx');
+var oracledb = require('oracledb');
+
 
 /* GET home page. */
 
@@ -56,9 +59,46 @@ router.post('/workbook', function(req, res, next) {
   res.status("200").send(returndata)
 });
 
-router.get('/requisition', function(req, res, next) {
-    console.log("requisition route called on backend");
-    res.status("200").send("hi");
+
+
+router.get('/requisition', function (req, res, next) {
+   "use strict";
+
+        var connAttrs = {
+            "user":"sdsoci",
+            "password":"Divcomp1!",
+            "connectString":"129.146.0.159/apexdev"
+        }
+   oracledb.getConnection(connAttrs, function (err, connection) {
+           console.log("ORACLE DB 500");
+       if (err) {
+           // Error connecting to DB
+           res.set('Content-Type', 'application/json');
+           res.status(500).send(JSON.stringify({
+               status: 500,
+               message: "Error connecting to DB",
+               detailed_message: err.message
+           }))
+        }
+        else{
+          console.log('Successfully connected to Oracle Database');
+          connection.execute(
+            `SELECT *
+             FROM REQ_IN_WAIT`,
+            function(err, result)
+            {
+              if (err) { console.error(err.message); return; }
+              console.log(result.rows);  // print all returned rows
+              res.status("200").send(result.rows);
+            }
+          );
+        }
+    })
 });
+
+// router.get('/requisition', function(req, res, next) {
+//     console.log("requisition route called on backend");
+//     res.status("200").send("hi");
+// });
 
 module.exports = router;

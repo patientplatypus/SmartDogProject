@@ -27,7 +27,7 @@ const data = [{
 
 //console.log("PROPS DATA: " + data);
 
-class EarlyPaymentTable extends Component {
+class InProcessReqs extends Component {
  
 
   //console.log("FOUND TEST" + {this.props.tableData});
@@ -94,40 +94,42 @@ class EarlyPaymentTable extends Component {
     sortedInfo = sortedInfo || {};
     filteredInfo = filteredInfo || {};
     const columns = [{
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      onFilter: (value, record) => record.name.includes(value),
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
+      title: 'Requisition Number',
+      dataIndex: 'requisitionNum',
+      key: 'requisitionNum',
+      sorter: (a, b) => a.requisitionNum - b.requisitionNum,
+      sortOrder: sortedInfo.columnKey === 'requisitionNum' && sortedInfo.order,
     }, {
-      title: 'Days Early',
-      dataIndex: 'daysEarly',
-      key: 'daysEarly',
-      sorter: (a, b) => a.daysEarly - b.daysEarly,
-      sortOrder: sortedInfo.columnKey === 'daysEarly' && sortedInfo.order,
+      title: 'Requisition Type',
+      dataIndex: 'requisitionType',
+      key: 'requisitionType',
+      sorter: (a, b) => a.requisitionType - b.requisitionType,
+      sortOrder: sortedInfo.columnKey === 'requisitionType' && sortedInfo.order,
     }, {
-      title: 'Amount Paid',
-      dataIndex: 'paymentAmount',
-      key: 'paymentAmount', 
-      onFilter: (value, record) => record.address.includes(value),
-      sorter: (a, b) => a.paymentAmount - b.paymentAmount,
-      sortOrder: sortedInfo.columnKey === 'paymentAmount' && sortedInfo.order,
+      title: 'Preparer',
+      dataIndex: 'preparer',
+      key: 'preparer',
+      sorter: (a, b) => a.preparer - b.preparer,
+      sortOrder: sortedInfo.columnKey === 'preparer' && sortedInfo.order,
     }, {
-      title: 'Neg. Cash Impact',
-      dataIndex: 'negImpact',
-      key: 'negImpact',
-      sorter: (a, b) => a.negImpact - b.negImpact,
-      sortOrder: sortedInfo.columnKey === 'negImpact' && sortedInfo.order,
+      title: 'Creator',
+      dataIndex: 'creator',
+      key: 'creator',
+      sorter: (a, b) => a.creator - b.creator,
+      sortOrder: sortedInfo.columnKey === 'creator' && sortedInfo.order,
+    }, {
+      title: 'Last Updated',
+      dataIndex: 'lastUpdateDate',
+      key: 'lastUpdateDate',
+      sorter: (a, b) => a.lastUpdateDate - b.lastUpdateDate,
+      sortOrder: sortedInfo.columnKey === 'lastUpdateDate' && sortedInfo.order,
     }];
     return (
       <div>
         <div className="table-operations">
-          <Button onClick={this.setImpactSort}>Sort Neg. Cash Impact</Button>
-          <Button onClick={this.setAmountSort}>Sort Amount Paid</Button>
-          <Button onClick={this.clearAll}>Clear Sorters</Button>
+         
         </div>
-        <Table columns={columns} pagination={{pageSize: 5}} dataSource={this.state.tableArr} onChange={this.handleChange} />
+        <Table columns={columns} dataSource={this.state.tableArr} pagination={{pageSize: 4}} onChange={this.handleChange} />
       </div>
     );
   } 
@@ -137,4 +139,4 @@ class EarlyPaymentTable extends Component {
 
 
 
-export default EarlyPaymentTable;
+export default InProcessReqs;
