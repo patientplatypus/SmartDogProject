@@ -122,7 +122,7 @@ class EarlyPaymentTable extends Component {
     }];
     return (
       <div>
-        <div className="table-operations">
+        <div className="table-operations" style={{padding: "10px"}}>
           <Button onClick={this.setImpactSort}>Sort Neg. Cash Impact</Button>
           <Button onClick={this.setAmountSort}>Sort Amount Paid</Button>
           <Button onClick={this.clearAll}>Clear Sorters</Button>

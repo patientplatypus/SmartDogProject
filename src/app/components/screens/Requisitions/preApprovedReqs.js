@@ -129,7 +129,7 @@ class PreApprovedReqs extends Component {
         <div className="table-operations">
          
         </div>
-        <Table columns={columns} dataSource={this.state.tableArr} pagination={{pageSize: 4}} onChange={this.handleChange} />
+        <Table columns={columns} size="small" dataSource={this.state.tableArr} pagination={{pageSize: 6}} onChange={this.handleChange} />
       </div>
     );
   } 

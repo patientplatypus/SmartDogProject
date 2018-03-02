@@ -171,12 +171,17 @@ class Requisitions extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ backgroundColor: "whiteSmoke" }}>
         {renderIf(this.state.inProcessRows.length )(
           <div>
-          <p>In Process </p>
+          <div style={{ fontSize: "2vh", fontWeight: "bold", paddingTop: "10px", paddingLeft: "10px"}}>
+            <p>In Process Requisitions </p>
+          </div>
             <div style={{height: "45vh", width: "100vw", overflow: "hidden"}}>
               <InProcessReqs tableData={this.state.inProcessRows} />
+            </div>
+            <div style={{ fontSize: "2vh", fontWeight: "bold", paddingLeft: "10px"}}>
+              <p>Pre Approved Requisitions </p>
             </div>
             <div style={{height: "45vh", width: "100vw", overflow: "hidden"}}>
               <PreApprovedReqs tableData={this.state.preApprovedRows} />

@@ -129,7 +129,7 @@ class InProcessReqs extends Component {
         <div className="table-operations">
          
         </div>
-        <Table columns={columns} dataSource={this.state.tableArr} pagination={{pageSize: 4}} onChange={this.handleChange} />
+        <Table columns={columns} dataSource={this.state.tableArr}  pagination={{pageSize: 4}} onChange={this.handleChange} />
       </div>
     );
   } 

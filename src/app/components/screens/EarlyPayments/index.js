@@ -299,7 +299,7 @@ class EarlyPayments extends Component {
       <div style={{ height: "100%", width: "100%" }}>
         <div class="graphContainer" style={{height: "250px", width: "100vw", display: "flex", flexDirection: "row", justifyContent: "flex-start"}}>
             
-              <div class="lineGraph" style={{ backgroundColor: "#ECECEC", flex: "3", width: "100vw"}}>
+              <div class="lineGraph" style={{ backgroundColor: "#d8dbe2", flex: "3", width: "100vw"}}>
             
                 <VictoryChart 
                 width={800} 
@@ -339,13 +339,13 @@ class EarlyPayments extends Component {
                   >
                     <VictoryArea
                       style={{
-                        data: { fill: "cyan", stroke: "cyan" }
+                        data: { fill: "#2b8ca3", stroke: "#2b8ca3" }
                       }}
                       data={this.state.impactArrLine}
                     />
                     <VictoryArea
                       style={{
-                        data: { fill: "magenta", stroke: "magenta" }
+                        data: { fill: "#2b8ca3", stroke: "#2b8ca3" }
                       }}
                       data={this.state.impactArrLine}
                     />
@@ -353,8 +353,8 @@ class EarlyPayments extends Component {
                 </VictoryChart>
               </div>
 
-              <div style={{height: "100%",flex: "2"}}>
-                <div style={{ background: '#ECECEC', padding: '30px' }}>
+              <div style={{flex: "2"}}>
+                <div style={{ background: '#d8dbe2', height: "100%", padding: '30px' }}>
                   <Card title="Top 3 Impacting Accounts" bordered={false} style={{ width: "100%", height: "100%" }}>
                     {renderIf(this.state.top3[0] !== undefined)(
                       <div>
