@@ -36,12 +36,13 @@ import { syncHistoryWithStore } from 'react-router-redux';
 // import IoT from './components/screens/IoTScreen';
 // import Test from './components/TestComponent';
 
-import EntryPage from './components/screens/EntryPage'
-import ActiveUsers from './components/screens/ActiveUsers'
-import EarlyPayments from './components/screens/EarlyPayments'
-import InvoicePriceVariance from './components/screens/InvoicePriceVariance'
-import Requisitions from './components/screens/Requisitions'
-import UnapprovedPurchaseOrders from './components/screens/UnapprovedPurchaseOrders'
+import EntryPage from './components/screens/EntryPage';
+import ActiveUsers from './components/screens/ActiveUsers';
+import EarlyPayments from './components/screens/EarlyPayments';
+import InvoicePriceVariance from './components/screens/InvoicePriceVariance';
+import Requisitions from './components/screens/Requisitions';
+import UnapprovedPurchaseOrders from './components/screens/UnapprovedPurchaseOrders';
+import RiskAnalysis from './components/screens/RiskAnalysis';
 import { Menu, Icon } from 'antd';
 
 import renderIf from "render-if";
@@ -131,6 +132,9 @@ class Root extends Component {
                <Menu.Item key="UnapprovedPurchaseOrders">
                  <Icon type="area-chart" /> Unapproved Purchase Orders
                </Menu.Item>
+               <Menu.Item key="RiskAnalysis">
+                 <Icon type="area-chart" /> Risk Analysis
+               </Menu.Item>
            </Menu>
 
            {renderIf(this.state.current==='splash')(
@@ -183,6 +187,12 @@ class Root extends Component {
            {renderIf(this.state.current==='UnapprovedPurchaseOrders')(
              <div>
                <UnapprovedPurchaseOrders />
+             </div>
+           )}
+
+           {renderIf(this.state.current==='RiskAnalysis')(
+             <div>
+               <RiskAnalysis />
              </div>
            )}
 
