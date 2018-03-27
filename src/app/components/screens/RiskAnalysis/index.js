@@ -20,9 +20,35 @@ class RiskAnalysis extends Component {
     super();
     this.state = {
       redirect: null,
-      payload: [],
+      data: [],
+      totalTests: 0, 
+      amountPassed: 0,
+      recordingPass: 0,
+      recordingTotal: 0,
+      custodyPass: 0,
+      custodyTotal: 0,
+      authPass: 0,
+      authTotal: 0,
+      veriPass: 0,
+      veriTotal: 0,
+      genLedgerPass: 0,
+      genLedgerTotal: 0,
+      receivablesPass: 0,
+      receivablesTotal: 0,
+      payablesPass: 0,
+      payablesTotal: 0,
+      purchasingPass: 0,
+      purchasingTotal: 0,
+      inventoryPass: 0,
+      inventoryTotal: 0,
+      adminPass: 0,
+      adminTotal: 0,
+      testTable: [],
     }
   }
+
+
+
 
   transformData(resp){
 
@@ -33,24 +59,34 @@ class RiskAnalysis extends Component {
     let amountPassed = 0;
     let recordingPass = 0;
     let recordingTotal = 0;
+    let recordingPerc = 0;
     let custodyPass = 0;
     let custodyTotal = 0;
+    let custodyPerc = 0;
     let authPass = 0;
     let authTotal = 0;
+    let authPerc = 0;
     let veriPass = 0;
     let veriTotal = 0;
+    let veriPerc = 0;
     let genLedgerPass = 0;
     let genLedgerTotal = 0;
+    let genLedgerPerc = 0;
     let receivablesPass = 0;
     let receivablesTotal = 0;
+    let receivablesPerc = 0;
     let payablesPass = 0;
     let payablesTotal = 0;
+    let payablesPerc = 0;
     let purchasingPass = 0;
     let purchasingTotal = 0;
+    let purchasingPerc = 0;
     let inventoryPass = 0;
     let inventoryTotal = 0;
+    let inventoryPerc = 0;
     let adminPass = 0;
     let adminTotal = 0;
+    let adminPerc = 0;
 
 
     data.forEach((element) => {
@@ -132,24 +168,51 @@ class RiskAnalysis extends Component {
         }
       }
 
-
-
-
-
-
     });
 
-    // this.setState({
+   
+
+    this.setState({
+      data: data,
+      totalTests: data.length, 
+      amountPassed: amountPassed,
+      recordingPass: recordingPass,
+      recordingTotal: recordingTotal,
+      recordingPerc: Math.round(recordingPass / recordingTotal * 100),
+      custodyPass: custodyPass,
+      custodyTotal: custodyTotal,
+      custodyPerc: Math.round(custodyPass / custodyTotal * 100),
+      authPass: authPass,
+      authTotal: authTotal,
+      authPerc: Math.round(authPass / authTotal * 100),
+      veriPass: veriPass,
+      veriTotal: veriTotal,
+      veriPerc: Math.round(veriPass / veriTotal * 100),
+      genLedgerPass: genLedgerPass,
+      genLedgerTotal: genLedgerTotal,
+      genLedgerPerc: Math.round(genLedgerPass / genLedgerTotal * 100),
+      receivablesPass: receivablesPass,
+      receivablesTotal: receivablesTotal,
+      receivablesPerc: Math.round(receivablesPass / receivablesTotal * 100),
+      payablesPass: payablesPass,
+      payablesTotal: payablesTotal,
+      payablesPerc: Math.round(payablesPass / payablesTotal * 100),
+      purchasingPass: purchasingPass,
+      purchasingTotal: purchasingTotal,
+      purchasingPerc: Math.round(purchasingPass / purchasingTotal * 100),
+      inventoryPass: inventoryPass,
+      inventoryTotal: inventoryTotal,
+      inventoryPerc: Math.round(inventoryPass / inventoryTotal * 100),
+      adminPass: adminPass,
+      adminTotal: adminTotal,
+      adminPerc: Math.round(adminPass / adminTotal * 100),
       
-    // }, () => {
-    //      console.log("state updated");
-
-    //    });
-
-    // };
+    });
 
 
   }
+
+  
 
   componentWillMount(){
     var url = "http://localhost:5000/workbook/"
@@ -166,35 +229,86 @@ class RiskAnalysis extends Component {
   }
 
 
+  setTableDataGov(test, pass){
+
+    let tableData = [];
+    let counter = 0;
+
+    this.state.data.forEach((element) => {
+
+      if(pass){
+        if(element.Governance === test && element.Violation === "Pass"){
+          tableData.push({
+            test: element["Segregation Test"],
+            outcome: element["Detail Outcome"]
+          });
+        }
+      }
+      else{
+        if(element.Governance === test){
+          tableData.push({
+            test: element["Segregation Test"],
+            outcome: element["Detail Outcome"]
+          });
+        }
+      }
+
+    });
+
+    console.log("SAMPLE TABLE DATAs" + tableData);
+    console.log(JSON.parse(JSON.stringify(tableData)));
+
+    this.setState({
+      testTable: tableData
+    }, ()=>{
+      console.log("after changing testTable: ", this.state.testTable);
+      this.forceUpdate();
+    });
+
+    // this.forceUpdate()
+
+  }
+
+  setTableDataFunc(test){
+
+    let tableData = [];
+
+    this.state.data.forEach((element) => {
+
+      if(test === "REC" ){
+
+      }
+      else if(test === "REC" ){
+
+      }
+    
+
+    });
+
+  }
+
+
   render() {
 
 
-    const columns = [{
-      title: 'Name',
-      dataIndex: 'name',
-    }, {
-      title: 'Age',
-      dataIndex: 'age',
-    }, {
-      title: 'Address',
-      dataIndex: 'address',
-    }];
-
-    const data = [{
+    const dataSource = [{
       key: '1',
-      name: 'John Brown',
-      money: '￥300,000.00',
-      address: 'New York No. 1 Lake Park',
+      name: 'Mike',
+      age: 32,
+      address: '10 Downing Street'
     }, {
       key: '2',
-      name: 'Jim Green',
-      money: '￥1,256,000.00',
-      address: 'London No. 1 Lake Park',
+      name: 'John',
+      age: 42,
+      address: '10 Downing Street'
+    }];
+
+    const columns = [{
+      title: 'Segregation Test',
+      dataIndex: 'test',
     }, {
-      key: '3',
-      name: 'Joe Black',
-      money: '￥120,000.00',
-      address: 'Sidney No. 1 Lake Park',
+      title: 'Detail Outcome',
+      dataIndex: 'outcome',
     }];
 
 
@@ -203,23 +317,54 @@ class RiskAnalysis extends Component {
         
         <div style={{ display: "flex", flexDirection: "row" }} >
           
-          <div style={{ height: "50vh", width: "35vw", backgroundColor: "#d8dbe2" }}> 
-            <Progress width={200} type="circle" percent={75} />
+          <div style={{ height: "40vh", width: "35vw", backgroundColor: "#d8dbe2" }}> 
+            <h2> Total Tests Passed </h2>
+            <Progress width={200} type="circle" percent={Math.round(this.state.amountPassed / this.state.totalTests * 100)} style={{ padding: "10px"}} />
           </div>
 
-          <div style={{ height: "50vh", width: "65vw", backgroundColor: "green" }}> 
-            <Table
-              columns={columns}
-              dataSource={data}
-              bordered
-              title={() => 'Header'}
-              footer={() => 'Footer'}
-            />
+          <div style={{ height: "40vh", width: "65vw", backgroundColor: "#d8dbe2" }}> 
+            <h2> Governance Breakdown </h2>
+            <table id="governance">
+              <tbody>
+                <tr>
+                  <th>Test</th>
+                  <th>Pass</th>
+                  <th>Total</th>
+                  <th>%</th>
+                </tr>
+                <tr>
+                  <td>Recording</td>
+                  <td onClick = {() => this.setTableDataGov("REC", true)}>{this.state.recordingPass}</td>
+                  <td>{this.state.recordingTotal}</td>
+                  <td>{this.state.recordingPerc}</td>
+                </tr>
+                <tr>
+                  <td>Custody</td>
+                  <td onClick = {() => this.setTableDataGov("CUS", true)}>{this.state.custodyPass}</td>
+                  <td>{this.state.custodyTotal}</td>
+                  <td>{this.state.custodyPerc}</td>
+                </tr>
+                <tr>
+                  <td>Authorization</td>
+                  <td>{this.state.authPass}</td>
+                  <td>{this.state.authTotal}</td>
+                  <td>{this.state.authPerc}</td>
+                </tr>
+                <tr>
+                  <td>Verification</td>
+                  <td>{this.state.veriPass}</td>
+                  <td>{this.state.veriTotal}</td>
+                  <td>{this.state.veriPerc}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
         </div>
 
-        <div style={{ height: "50vh", width: "100vw", backgroundColor: "red" }} > 
+        <div style={{ height: "60vh", width: "100vw", backgroundColor: "" }} > 
+        <h2> Test Breakdown </h2>
+          <Table dataSource={this.state.testTable} columns={columns} />
         </div>
 
       </div>

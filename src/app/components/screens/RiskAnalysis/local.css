@@ -1,0 +1,27 @@
+#governance {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border: 1px solid "#fffcff";
+    border-collapse: collapse;
+    width: auto;
+}
+
+#governance td, #governance th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#governance tr:nth-child(even){background-color: #f2f2f2;}
+
+#governance tr:hover {background-color: #ddd;}
+
+#governance th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #2b8ca3;
+    color: white;
+}
+
+h2 {
+    padding: 5px;
+}
