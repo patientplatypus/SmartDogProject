@@ -105,6 +105,7 @@ router.get('/requisition', function (req, res, next) {
         }
    oracledb.getConnection(connAttrs, function (err, connection) {
            console.log("ORACLE DB 500");
+           console.log("ERROR: "+ err);
        if (err) {
            // Error connecting to DB
            res.set('Content-Type', 'application/json');

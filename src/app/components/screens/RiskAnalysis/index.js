@@ -3,7 +3,8 @@ import {
   Form,
   Icon,
   Progress,
-  Table
+  Table,
+  Card
 } from 'antd';
 import axios from 'axios';
 import {Link, Redirect} from "react-router-dom";
@@ -237,19 +238,31 @@ class RiskAnalysis extends Component {
     this.state.data.forEach((element) => {
 
       if(pass){
-        if(element.Governance === test && element.Violation === "Pass"){
+        if((element.Governance === test && element.Violation === "Pass") || (element.Application === test && element.Violation === "Pass")){
           tableData.push({
             test: element["Segregation Test"],
-            outcome: element["Detail Outcome"]
+            outcome: element["Detail Outcome"],
+            color: "#80fc8f"
           });
         }
       }
       else{
-        if(element.Governance === test){
-          tableData.push({
-            test: element["Segregation Test"],
-            outcome: element["Detail Outcome"]
-          });
+        if(element.Governance === test || element.Application === test){
+          if(element.Violation === "Pass"){
+            tableData.push({
+              test: element["Segregation Test"],
+              outcome: element["Detail Outcome"],
+              color: "#80fc8f"
+            });
+          }
+          else{
+            tableData.push({
+              test: element["Segregation Test"],
+              outcome: element["Detail Outcome"],
+              color: "#ef5f5f"
+            });
+
+          }  
         }
       }
 
@@ -306,68 +319,177 @@ class RiskAnalysis extends Component {
     const columns = [{
       title: 'Segregation Test',
       dataIndex: 'test',
+      render(text, record) {
+        return {
+          props: {
+            style: { background: record.color },
+          },
+          children: <div>{text}</div>,
+        };
+      }
     }, {
       title: 'Detail Outcome',
       dataIndex: 'outcome',
+      render(text, record) {
+        return {
+          props: {
+            style: { background: record.color },
+          },
+          children: <div>{text}</div>,
+        };
+      }
     }];
 
 
     return(
-      <div style={{  }}>
-        
-        <div style={{ display: "flex", flexDirection: "row" }} >
-          
-          <div style={{ height: "40vh", width: "35vw", backgroundColor: "#d8dbe2" }}> 
-            <h2> Total Tests Passed </h2>
-            <Progress width={200} type="circle" percent={Math.round(this.state.amountPassed / this.state.totalTests * 100)} style={{ padding: "10px"}} />
+     <div style={{ height: "95vh", width: "100vw", backgroundColor: "", display: "flex", flexDirection: "row" }}>
+
+            <div style={{ height: "95vh", width: "50%", backgroundColor: "#d8dbe2", display: "flex", flexDirection: "column" }} >
+
+              <div style={{ display: "flex", flexDirection: "row" }}>
+
+                <div style={{ height: "33%", width: "50vw", backgroundColor: "#d8dbe2" }}> 
+                  <h2> Total Tests Passed </h2>
+                  <Progress width={200} type="circle" percent={Math.round(this.state.amountPassed / this.state.totalTests * 100)} style={{ padding: "10px"}} />
+                </div>
+
+                <div style={{ height: "33%", width: "50vw", backgroundColor: "#d8dbe2" }}> 
+                  <h2> Governance Breakdown </h2>
+                  <table id="governance">
+                    <tbody>
+                      <tr>
+                        <th>Test</th>
+                        <th>Pass</th>
+                        <th>Total</th>
+                        <th>%</th>
+                      </tr>
+                      <tr>
+                        <td>Recording</td>
+                        <td onClick = {() => this.setTableDataGov("REC", true)}>{this.state.recordingPass}</td>
+                        <td onClick = {() => this.setTableDataGov("REC", false)}>{this.state.recordingTotal}</td>
+                        <td>{this.state.recordingPerc}</td>
+                      </tr>
+                      <tr>
+                        <td>Custody</td>
+                        <td onClick = {() => this.setTableDataGov("CUS", true)}>{this.state.custodyPass}</td>
+                        <td onClick = {() => this.setTableDataGov("CUS", false)}>{this.state.custodyTotal}</td>
+                        <td>{this.state.custodyPerc}</td>
+                      </tr>
+                      <tr>
+                        <td>Authorization</td>
+                        <td onClick = {() => this.setTableDataGov("AUT", true)}>{this.state.authPass}</td>
+                        <td onClick = {() => this.setTableDataGov("AUT", false)}>{this.state.authTotal}</td>
+                        <td>{this.state.authPerc}</td>
+                      </tr>
+                      <tr>
+                        <td>Verification</td>
+                        <td onClick = {() => this.setTableDataGov("VER", true)}>{this.state.veriPass}</td>
+                        <td onClick = {() => this.setTableDataGov("VER", false)}>{this.state.veriTotal}</td>
+                        <td>{this.state.veriPerc}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              <div style={{ height: "33%", width: "50vw", backgroundColor: "#d8dbe2" }}> 
+                <h2> Functional Breakdown </h2>
+                <table id="governance">
+                  <tbody>
+                    <tr>
+                      <th>Application</th>
+                      <th>Pass</th>
+                      <th>Total</th>
+                      <th>%</th>
+                    </tr>
+                    <tr>
+                      <td>General Ledger</td>
+                      <td onClick = {() => this.setTableDataGov("GL", true)}>{this.state.genLedgerPass}</td>
+                      <td onClick = {() => this.setTableDataGov("GL", false)}>{this.state.genLedgerTotal}</td>
+                      <td>{this.state.genLedgerPerc}</td>
+                    </tr>
+                    <tr>
+                      <td>Accounts Receivables</td>
+                      <td onClick = {() => this.setTableDataGov("AR", true)}>{this.state.receivablesPass}</td>
+                      <td onClick = {() => this.setTableDataGov("AR", false)}>{this.state.receivablesTotal}</td>
+                      <td>{this.state.receivablesPerc}</td>
+                    </tr>
+                    <tr>
+                      <td>Accounts Payables</td>
+                      <td onClick = {() => this.setTableDataGov("AP", true)}>{this.state.payablesPass}</td>
+                      <td onClick = {() => this.setTableDataGov("AP", false)}>{this.state.payablesTotal}</td>
+                      <td>{this.state.payablesPerc}</td>
+                    </tr>
+                    <tr>
+                      <td>Purchasing</td>
+                      <td onClick = {() => this.setTableDataGov("PO", true)}>{this.state.purchasingPass}</td>
+                      <td onClick = {() => this.setTableDataGov("PO", false)}>{this.state.purchasingTotal}</td>
+                      <td>{this.state.purchasingPerc}</td>
+                    </tr>
+                    <tr>
+                      <td>Inventory</td>
+                      <td onClick = {() => this.setTableDataGov("INV", true)}>{this.state.inventoryPass}</td>
+                      <td onClick = {() => this.setTableDataGov("INV", false)}>{this.state.inventoryTotal}</td>
+                      <td>{this.state.inventoryPerc}</td>
+                    </tr>
+                    <tr>
+                      <td>Administration</td>
+                      <td onClick = {() => this.setTableDataGov("Admin", true)}>{this.state.adminPass}</td>
+                      <td onClick = {() => this.setTableDataGov("Admin", false)}>{this.state.adminTotal}</td>
+                      <td>{this.state.adminPerc}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "row" }}>
+
+                <Card title="Segregation of Duties Best Practice"  style={{ width: "32%", height: "50vh", margin: "3px" }}>
+                  <p>1.  <a href="http://www.ey.com/Publication/vwLUAssets/EY_Segregation_of_duties/$FILE/EY_Segregation_of_duties.pdf">Ernst & Young:</a>  A risk-based approach to segregation of duties</p>
+                  <p>2.  <a href="https://www.kpmg-institutes.com/institutes/advisory-institute/events/2017/10/segregation-of-duties-best-practices-for-a-sustainable-process.html">Bearing Point:</a>  Segregation of Duties – Best Practices for a Sustainable Process</p>
+                  <p>3.  <a href="https://www.pwc.com/us/en/increasing-it-effectiveness/publications/minimum-access-maximum-sod-validation.html">PWC:</a>  Minimum access, maximum SOD validation</p>
+                  <p>4.  <a href="https://oaug.org/component/k2/item/3035-real-life-examples-oracle-grc-benefits-of-oracle-ebs12-upgrade-implementation">KPMG:</a>  Real-Life Examples: Oracle GRC Benefits of Oracle EBS12 Upgrade/Implementation</p>
+                  <p>5.  <a href="https://www.isaca.org/Journal/archives/2016/volume-3/Pages/implementing-segregation-of-duties.aspx">ISACA Journal:</a>  Implementing Segregation of Duties: A Practical Experience Based on Best Practices</p>
+                </Card>
+
+                <Card title="Oracle User Group Collateral"  style={{ width: "32%", height: "50vh", margin: "3px" }}>
+                  <p>1.  <a href="https://oaug.org/education-events/elearning/archive/2018/item/7118-oracle-e-business-suite-comply-grc-segregation-of-duties">Config SnapShot</a> - Oracle E-Business Suite ‘Comply’ – GRC & Segregation of Duties</p>
+                  <p>2.  <a href="https://oaug.org/component/k2/item/7119-oaug-apex-for-ebs-sig-presents-security-audit-controls-and-compliance-for-ebs-using-oracle-apex">Kirby Corporation</a> - OAUG APEX for EBS SIG Presents: Security, Audit, Controls and Compliance for EBS using Oracle Apex</p>
+                  <p>3.  <a href="http://www.fulcrumway.com/images/resources/OracleEBSSegragationDutyControls.pdf">Fulcrum Way:</a>  Rapidly Reduce Segregation of Duty Violations in Oracle EBS R12 Responsibilities</p>
+                  <p>4.  <a href="https://oaug.org/component/k2/item/5914-sarbanes-oxley-compliance-challenges-for-oracle-e-business-suite-panel">ERP Risk Advisors:</a>  Sarbanes Oxley Compliance Challenges for Oracle E-Business Suite Panel</p>
+                </Card>
+
+                <Card title="SmartDog Partner Solutions"  style={{ width: "32%", height: "50vh", margin: "3px" }}>
+                  <ul style={{ listStyle: "square outside" }}>
+                    <li >Card content</li>
+                    <li>Card content</li>
+                    <li>Card content</li>
+                  </ul>
+                </Card>
+
+              </div>
+              
+            </div>
+
+            <div style={{ height: "100%", width: "50%", backgroundColor: "" }} >
+
+              <div style={{ height: "100%", width: "50vw", backgroundColor: "" }} > 
+                <h2> Test Breakdown </h2>
+                <Table 
+                dataSource={this.state.testTable} 
+                columns={columns}
+                pagination={{ pageSize: 9 }}
+               />
+              </div>
+              
+            </div>
+
+           
+
+
+            
           </div>
-
-          <div style={{ height: "40vh", width: "65vw", backgroundColor: "#d8dbe2" }}> 
-            <h2> Governance Breakdown </h2>
-            <table id="governance">
-              <tbody>
-                <tr>
-                  <th>Test</th>
-                  <th>Pass</th>
-                  <th>Total</th>
-                  <th>%</th>
-                </tr>
-                <tr>
-                  <td>Recording</td>
-                  <td onClick = {() => this.setTableDataGov("REC", true)}>{this.state.recordingPass}</td>
-                  <td>{this.state.recordingTotal}</td>
-                  <td>{this.state.recordingPerc}</td>
-                </tr>
-                <tr>
-                  <td>Custody</td>
-                  <td onClick = {() => this.setTableDataGov("CUS", true)}>{this.state.custodyPass}</td>
-                  <td>{this.state.custodyTotal}</td>
-                  <td>{this.state.custodyPerc}</td>
-                </tr>
-                <tr>
-                  <td>Authorization</td>
-                  <td>{this.state.authPass}</td>
-                  <td>{this.state.authTotal}</td>
-                  <td>{this.state.authPerc}</td>
-                </tr>
-                <tr>
-                  <td>Verification</td>
-                  <td>{this.state.veriPass}</td>
-                  <td>{this.state.veriTotal}</td>
-                  <td>{this.state.veriPerc}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-        </div>
-
-        <div style={{ height: "60vh", width: "100vw", backgroundColor: "" }} > 
-        <h2> Test Breakdown </h2>
-          <Table dataSource={this.state.testTable} columns={columns} />
-        </div>
-
-      </div>
     );
 
   }
@@ -392,3 +514,24 @@ export default (connect(
     mapStateToProps, mapDispatchToProps)(
     RiskAnalysis
 ))
+
+
+/*
+
+rowClassName={(record, index) => {
+            console.log("index: " + index);
+            console.log("record: " + JSON.stringify(record))
+            console.log("TEST-TABLE[index] " + this.state.testTable[index])
+            if(this.state.testTable[index].pass === true){
+              record.color('green');
+              console.log("FOUND TRUE");
+            }
+            else{
+              record.color('red');
+              console.log("FOUND FALSE");
+            }
+
+          }}
+
+
+*/
