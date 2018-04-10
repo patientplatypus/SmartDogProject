@@ -17,6 +17,15 @@
 - It uses React and the Ant Design UI library.
 
 # Pics
-![Screenshot](/pics/pic1.png?raw=true "Pic 1")
+
+- Splash Screen
+
 ![Screenshot](/pics/pic2.png?raw=true "Pic 2")
+
+- Active Users View
+
+![Screenshot](/pics/pic1.png?raw=true "Pic 1")
+
+- Risk Analysis View
+
 ![Screenshot](/pics/pic3.png?raw=true "Pic 3")
